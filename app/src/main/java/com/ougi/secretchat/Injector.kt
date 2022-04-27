@@ -11,6 +11,8 @@ import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
+import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerComponentHolder
+import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerDeps
 
 object Injector {
 
@@ -23,6 +25,7 @@ object Injector {
         //injectCoreDbComponent()
 
         //features
+        injectWorkManagerInitializerComponent()
     }
 
     private fun injectAppComponent() {
@@ -85,5 +88,19 @@ object Injector {
     Feature modules injection
      **/
 
+    private fun injectWorkManagerInitializerComponent() {
+        WorkManagerInititalizerComponentHolder.depsProvider = {
+            object : DepsHolder<WorkManagerInititalizerDeps> {
+                override val depsFactory: (DepsHolder<WorkManagerInititalizerDeps>) -> WorkManagerInititalizerDeps =
+                    { deps ->
+                        object : WorkManagerInititalizerDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                        }
+                    }
+            }.deps
+        }
+    }
 
 }
