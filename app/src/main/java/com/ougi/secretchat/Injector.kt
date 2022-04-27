@@ -11,6 +11,9 @@ import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
+import com.ougi.websocketapi.data.WebSocketWorkerFactory
+import com.ougi.websocketimpl.di.WebSocketFeatureComponentHolder
+import com.ougi.websocketimpl.di.WebSocketFeatureDeps
 import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerComponentHolder
 import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerDeps
 
@@ -26,6 +29,7 @@ object Injector {
 
         //features
         injectWorkManagerInitializerComponent()
+        injectWebSocketFeatureComponent()
     }
 
     private fun injectAppComponent() {
@@ -94,6 +98,23 @@ object Injector {
                 override val depsFactory: (DepsHolder<WorkManagerInititalizerDeps>) -> WorkManagerInititalizerDeps =
                     { deps ->
                         object : WorkManagerInititalizerDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val webSocketWorkerFactory: WebSocketWorkerFactory
+                                get() = WebSocketFeatureComponentHolder.getInstance().webSocketWorkerFactory
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectWebSocketFeatureComponent() {
+        WebSocketFeatureComponentHolder.depsProvider = {
+            object : DepsHolder<WebSocketFeatureDeps> {
+                override val depsFactory: (DepsHolder<WebSocketFeatureDeps>) -> WebSocketFeatureDeps =
+                    { deps ->
+                        object : WebSocketFeatureDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps

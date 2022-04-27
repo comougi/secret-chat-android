@@ -39,6 +39,7 @@ dependencies {
     //import
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
+    implementation(project(":features:websocket:websocket-api"))
 
     //workmanager
     val workVersion = "2.7.1"
