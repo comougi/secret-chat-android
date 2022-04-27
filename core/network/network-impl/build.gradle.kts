@@ -39,7 +39,7 @@ dependencies {
     //import
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
-    implementation(project(":core:network-api"))
+    implementation(project(":core:network:network-api"))
 
     //dagger
     implementation("com.google.dagger:dagger:2.41")
