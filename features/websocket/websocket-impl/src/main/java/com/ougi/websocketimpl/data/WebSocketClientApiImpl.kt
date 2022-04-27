@@ -31,10 +31,21 @@ class WebSocketClientApiImpl @Inject constructor(
         return webSocketListener
     }
 
-    override fun observeWebSocketWork(
-        onStateChanged: (WebSocketState) -> Unit,
-        onMessageReceived: (String) -> Unit
-    ) {
+    override fun observeWebSocketState(onStateChanged: (WebSocketState) -> Unit) {
+        observeWebSocketWork { values ->
+            val state = values[WebSocketWorker.STATE] as WebSocketState
+            onStateChanged(state)
+        }
+    }
+
+    override fun observeWebSocketMessages(onMessageReceived: (String) -> Unit) {
+        observeWebSocketWork { values ->
+            val message = values[WebSocketWorker.MESSAGE] as String
+            onMessageReceived(message)
+        }
+    }
+
+    private fun observeWebSocketWork(onProgressChanged: (Map<String, Any>) -> Unit) {
         workManager.getWorkInfosForUniqueWorkLiveData(WebSocketWorker.WEB_SOCKET_WORK_NAME)
             .observe(context as LifecycleOwner) { workInfos ->
                 if (
@@ -44,10 +55,7 @@ class WebSocketClientApiImpl @Inject constructor(
                     val workInfo = workInfos
                         .first { workInfo -> workInfo.state == WorkInfo.State.RUNNING }
                     val progressValues = workInfo.progress.keyValueMap
-                    val state = progressValues[WebSocketWorker.STATE] as WebSocketState
-                    val message = progressValues[WebSocketWorker.MESSAGE] as String
-                    onStateChanged.invoke(state)
-                    onMessageReceived.invoke(message)
+                    onProgressChanged(progressValues)
                 } else {
                     enqueueWebSocketWork(context)
                 }
