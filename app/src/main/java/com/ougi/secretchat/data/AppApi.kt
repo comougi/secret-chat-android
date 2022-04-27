@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo.data
+package com.ougi.secretchat.data
 
 import com.ougi.corecommon.base.di.BaseFeatureApi
 

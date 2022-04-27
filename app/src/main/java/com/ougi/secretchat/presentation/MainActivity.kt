@@ -1,6 +1,6 @@
-package com.ougi.daggermultimoduledemo.presentation
+package com.ougi.secretchat.presentation
 
 import com.ougi.corecommon.base.view.BaseActivity
-import com.ougi.daggermultimoduledemo.databinding.ActivityMainBinding
+import com.ougi.secretchat.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate)

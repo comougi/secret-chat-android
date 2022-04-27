@@ -1,6 +1,6 @@
-package com.ougi.daggermultimoduledemo.di
+package com.ougi.secretchat.di
 
-import com.ougi.daggermultimoduledemo.data.AppApi
+import com.ougi.secretchat.data.AppApi
 import dagger.Component
 import javax.inject.Singleton
 

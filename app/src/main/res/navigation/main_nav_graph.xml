@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.ougi.daggermultimoduledemo.presentation.MainFragment"
+        android:name="com.ougi.secretchat.presentation.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" />
 

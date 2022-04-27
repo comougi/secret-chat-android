@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo
+package com.ougi.secretchat
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo
+package com.ougi.secretchat
 
 import android.content.Context
 import com.ougi.corecommon.base.di.BaseFeatureDeps
@@ -6,13 +6,13 @@ import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
 import com.ougi.coreutils.utils.ContextProvider
-import com.ougi.daggermultimoduledemo.data.ContextProviderImpl
-import com.ougi.daggermultimoduledemo.di.AppComponentHolder
-import com.ougi.daggermultimoduledemo.di.AppDeps
 import com.ougi.dbimpl.di.CoreDbComponentHolder
 import com.ougi.dbimpl.di.CoreDbDeps
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
+import com.ougi.secretchat.data.ContextProviderImpl
+import com.ougi.secretchat.di.AppComponentHolder
+import com.ougi.secretchat.di.AppDeps
 
 object Injector {
 

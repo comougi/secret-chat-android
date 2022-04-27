@@ -8,7 +8,7 @@ android {
     compileSdk = 31
 
     defaultConfig {
-        applicationId = "com.ougi.daggermultimoduledemo"
+        applicationId = "com.ougi.secretchat"
         minSdk = 24
         targetSdk = 31
         versionCode = 1

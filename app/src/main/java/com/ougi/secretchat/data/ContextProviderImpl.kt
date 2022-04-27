@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo.data
+package com.ougi.secretchat.data
 
 import android.content.Context
 import com.ougi.coreutils.utils.ContextProvider

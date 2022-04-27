@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo.di
+package com.ougi.secretchat.di
 
 import dagger.Module
 

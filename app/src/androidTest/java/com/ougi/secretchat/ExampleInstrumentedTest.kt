@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo
+package com.ougi.secretchat
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

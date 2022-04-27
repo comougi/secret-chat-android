@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ougi.daggermultimoduledemo">
+    package="com.ougi.secretchat">
 
     <application
-        android:name=".App"
+        android:name="com.ougi.secretchat.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DaggerMultiModuleDemo">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.ougi.secretchat.presentation.MainActivity"
             android:exported="true">
             <nav-graph android:value="@navigation/main_nav_graph" />
             <intent-filter>

@@ -1,8 +1,8 @@
-package com.ougi.daggermultimoduledemo.di
+package com.ougi.secretchat.di
 
 import com.ougi.coreutils.dagger.ComponentHolder
 import com.ougi.coreutils.dagger.ComponentHolderDelegate
-import com.ougi.daggermultimoduledemo.data.AppApi
+import com.ougi.secretchat.data.AppApi
 
 object AppComponentHolder : ComponentHolder<AppApi, AppDeps> {
 

@@ -1,4 +1,4 @@
-package com.ougi.daggermultimoduledemo
+package com.ougi.secretchat
 
 import android.app.Application
 
