@@ -39,10 +39,6 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    //room
-    val roomVersion = "2.4.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-
     //serialization
     val serializationVersion = "1.3.2"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")

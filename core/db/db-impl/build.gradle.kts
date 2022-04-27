@@ -37,7 +37,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     //import
-    implementation(project(":core:db-api"))
+    implementation(project(":core:db:db-api"))
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
 
