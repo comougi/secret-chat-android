@@ -6,8 +6,6 @@ import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
 import com.ougi.coreutils.utils.ContextProvider
-import com.ougi.dbimpl.di.CoreDbComponentHolder
-import com.ougi.dbimpl.di.CoreDbDeps
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.secretchat.data.ContextProviderImpl
@@ -22,7 +20,7 @@ object Injector {
         //core
         injectCoreUtilsComponent(context)
         injectCoreNetworkComponent()
-        injectCoreDbComponent()
+        //injectCoreDbComponent()
 
         //features
     }
@@ -69,19 +67,19 @@ object Injector {
         }
     }
 
-    private fun injectCoreDbComponent() {
-        CoreDbComponentHolder.depsProvider = {
-            object : DepsHolder<CoreDbDeps> {
-                override val depsFactory: (DepsHolder<CoreDbDeps>) -> CoreDbDeps = { deps ->
-                    object : CoreDbDeps {
-                        override val contextProvider: ContextProvider
-                            get() = CoreUtilsComponentHolder.getInstance().contextProvider
-                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
-                    }
-                }
-            }.deps
-        }
-    }
+//    private fun injectCoreDbComponent() {
+//        CoreDbComponentHolder.depsProvider = {
+//            object : DepsHolder<CoreDbDeps> {
+//                override val depsFactory: (DepsHolder<CoreDbDeps>) -> CoreDbDeps = { deps ->
+//                    object : CoreDbDeps {
+//                        override val contextProvider: ContextProvider
+//                            get() = CoreUtilsComponentHolder.getInstance().contextProvider
+//                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+//                    }
+//                }
+//            }.deps
+//        }
+//    }
 
     /**
     Feature modules injection
