@@ -5,9 +5,10 @@ import com.ougi.encryptionapi.data.utils.HashUtils
 import java.security.Key
 import java.security.MessageDigest
 import javax.crypto.Mac
+import javax.inject.Inject
 import kotlin.experimental.and
 
-class HashUtilsImpl : HashUtils {
+class HashUtilsImpl @Inject constructor() : HashUtils {
 
     override fun generateSha512Hash(from: String): String {
         val messageDigest = MessageDigest.getInstance("SHA-512")

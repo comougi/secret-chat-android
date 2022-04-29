@@ -6,8 +6,9 @@ import java.security.PublicKey
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
+import javax.inject.Inject
 
-class EncryptionUtilsImpl : EncryptionUtils {
+class EncryptionUtilsImpl @Inject constructor() : EncryptionUtils {
 
     private val rsaCipher = Cipher.getInstance(RSA)
     private val aesCipher = Cipher.getInstance(AES)

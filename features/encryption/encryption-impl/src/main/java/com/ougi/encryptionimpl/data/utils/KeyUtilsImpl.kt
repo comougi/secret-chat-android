@@ -15,7 +15,9 @@ import javax.inject.Inject
 
 class KeyUtilsImpl @Inject constructor(private val hashUtils: HashUtils) : KeyUtils {
 
-    override fun getAesKeyFromPass(pass: String): SecretKey {
+    override var secretKey: SecretKey? = null
+
+    override fun setAesKeyFromPass(pass: String): SecretKey {
         val salt = hashUtils.getSalt(pass)
         val passCharArray = pass.toCharArray()
 
@@ -24,6 +26,7 @@ class KeyUtilsImpl @Inject constructor(private val hashUtils: HashUtils) : KeyUt
 
         val key = factory.generateSecret(spec)
         return SecretKeySpec(key.encoded, "AES")
+            .also { secretKey = it }
     }
 
     override fun generateRsaKeyPair(): KeyPair {
