@@ -6,6 +6,8 @@ import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
 import com.ougi.coreutils.utils.ContextProvider
+import com.ougi.datastoreimpl.di.DataStoreFeatureComponentHolder
+import com.ougi.datastoreimpl.di.DataStoreFeatureDeps
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
 import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
@@ -31,6 +33,7 @@ object Injector {
 
         //features
         injectEncryptionFeatureComponent()
+        injectDataStoreFeatureComponent()
         injectWorkManagerInitializerComponent()
         injectWebSocketFeatureComponent()
     }
@@ -38,9 +41,9 @@ object Injector {
     private fun injectAppComponent() {
         AppComponentHolder.depsProvider = {
             object : DepsHolder<AppDeps> {
-                override val depsFactory: (DepsHolder<AppDeps>) -> AppDeps = { deps ->
+                override val depsFactory: (DepsHolder<AppDeps>) -> AppDeps = { depsHolder ->
                     object : AppDeps {
-                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                     }
                 }
             }.deps
@@ -54,12 +57,14 @@ object Injector {
     private fun injectCoreUtilsComponent(context: Context) {
         CoreUtilsComponentHolder.depsProvider = {
             object : DepsHolder<CoreUtilsDeps> {
-                override val depsFactory: (DepsHolder<CoreUtilsDeps>) -> CoreUtilsDeps = { deps ->
-                    object : CoreUtilsDeps {
-                        override val contextProvider: ContextProvider = ContextProviderImpl(context)
-                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                override val depsFactory: (DepsHolder<CoreUtilsDeps>) -> CoreUtilsDeps =
+                    { depsHolder ->
+                        object : CoreUtilsDeps {
+                            override val contextProvider: ContextProvider =
+                                ContextProviderImpl(context)
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
                     }
-                }
             }.deps
         }
     }
@@ -68,9 +73,9 @@ object Injector {
         CoreNetworkComponentHolder.depsProvider = {
             object : DepsHolder<CoreNetworkDeps> {
                 override val depsFactory: (DepsHolder<CoreNetworkDeps>) -> CoreNetworkDeps =
-                    { deps ->
+                    { depsHolder ->
                         object : CoreNetworkDeps {
-                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
             }.deps
@@ -80,11 +85,11 @@ object Injector {
 //    private fun injectCoreDbComponent() {
 //        CoreDbComponentHolder.depsProvider = {
 //            object : DepsHolder<CoreDbDeps> {
-//                override val depsFactory: (DepsHolder<CoreDbDeps>) -> CoreDbDeps = { deps ->
+//                override val depsFactory: (DepsHolder<CoreDbDeps>) -> CoreDbDeps = { depsHolder ->
 //                    object : CoreDbDeps {
 //                        override val contextProvider: ContextProvider
 //                            get() = CoreUtilsComponentHolder.getInstance().contextProvider
-//                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+//                        override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
 //                    }
 //                }
 //            }.deps
@@ -99,13 +104,13 @@ object Injector {
         WorkManagerInititalizerComponentHolder.depsProvider = {
             object : DepsHolder<WorkManagerInititalizerDeps> {
                 override val depsFactory: (DepsHolder<WorkManagerInititalizerDeps>) -> WorkManagerInititalizerDeps =
-                    { deps ->
+                    { depsHolder ->
                         object : WorkManagerInititalizerDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
                             override val webSocketWorkerFactory: WebSocketWorkerFactory
                                 get() = WebSocketFeatureComponentHolder.getInstance().webSocketWorkerFactory
-                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
             }.deps
@@ -116,11 +121,11 @@ object Injector {
         WebSocketFeatureComponentHolder.depsProvider = {
             object : DepsHolder<WebSocketFeatureDeps> {
                 override val depsFactory: (DepsHolder<WebSocketFeatureDeps>) -> WebSocketFeatureDeps =
-                    { deps ->
+                    { depsHolder ->
                         object : WebSocketFeatureDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
-                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
             }.deps
@@ -131,9 +136,24 @@ object Injector {
         EncryptionFeatureComponentHolder.depsProvider = {
             object : DepsHolder<EncryptionFeatureDeps> {
                 override val depsFactory: (DepsHolder<EncryptionFeatureDeps>) -> EncryptionFeatureDeps =
-                    { deps ->
+                    { depsHolder ->
                         object : EncryptionFeatureDeps {
-                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectDataStoreFeatureComponent() {
+        DataStoreFeatureComponentHolder.depsProvider = {
+            object : DepsHolder<DataStoreFeatureDeps> {
+                override val depsFactory: (DepsHolder<DataStoreFeatureDeps>) -> DataStoreFeatureDeps =
+                    { depsHolder ->
+                        object : DataStoreFeatureDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
             }.deps
