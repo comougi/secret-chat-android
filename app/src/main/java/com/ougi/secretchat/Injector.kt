@@ -6,6 +6,8 @@ import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
 import com.ougi.coreutils.utils.ContextProvider
+import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
+import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.secretchat.data.ContextProviderImpl
@@ -28,6 +30,7 @@ object Injector {
         //injectCoreDbComponent()
 
         //features
+        injectEncryptionFeatureComponent()
         injectWorkManagerInitializerComponent()
         injectWebSocketFeatureComponent()
     }
@@ -117,6 +120,19 @@ object Injector {
                         object : WebSocketFeatureDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectEncryptionFeatureComponent() {
+        EncryptionFeatureComponentHolder.depsProvider = {
+            object : DepsHolder<EncryptionFeatureDeps> {
+                override val depsFactory: (DepsHolder<EncryptionFeatureDeps>) -> EncryptionFeatureDeps =
+                    { deps ->
+                        object : EncryptionFeatureDeps {
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = deps
                         }
                     }
