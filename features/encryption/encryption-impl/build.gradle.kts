@@ -40,10 +40,14 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:common"))
     implementation(project(":features:encryption:encryption-api"))
+    implementation(project(":features:datastore:datastore-api"))
 
     //dagger
     implementation("com.google.dagger:dagger:2.41")
     kapt("com.google.dagger:dagger-compiler:2.41")
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")

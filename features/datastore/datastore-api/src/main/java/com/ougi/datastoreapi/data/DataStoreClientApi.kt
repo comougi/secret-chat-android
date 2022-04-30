@@ -13,14 +13,21 @@ interface DataStoreClientApi {
     val dataStore: DataStore<Preferences>
 }
 
-inline fun <reified T> DataStoreClientApi.read(key: Preferences.Key<String>): Flow<T?> {
+inline fun <reified K, reified V> DataStoreClientApi.read(key: Preferences.Key<K>): Flow<V?> {
     return dataStore.data.map { preferences ->
-        preferences[key]?.let { Json.decodeFromString(it) }
+        preferences[key]?.let { value ->
+            if (value is String && V::class.java != String::class.java) Json.decodeFromString(value)
+            else value as V
+        }
     }
 }
 
-suspend inline fun <reified T> DataStoreClientApi.write(key: Preferences.Key<String>, value: T) {
+suspend inline fun <reified K, reified V> DataStoreClientApi.write(
+    key: Preferences.Key<K>,
+    value: V
+) {
     dataStore.edit { preferences ->
-        preferences[key] = Json.encodeToJsonElement(value).toString()
+        if (value is K) preferences[key] = value
+        else preferences[key] = Json.encodeToJsonElement(value).toString() as K
     }
 }
