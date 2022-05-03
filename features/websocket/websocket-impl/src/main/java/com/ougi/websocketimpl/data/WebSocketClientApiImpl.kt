@@ -9,8 +9,10 @@ import com.ougi.websocketapi.data.WebSocketClientApi
 import com.ougi.websocketapi.data.WebSocketState
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.WebSocket
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class WebSocketClientApiImpl @Inject constructor(
     private val context: Context,
@@ -29,6 +31,13 @@ class WebSocketClientApiImpl @Inject constructor(
             .build()
         okHttpClient.newWebSocket(wsConnectRequest, webSocketListener)
         return webSocketListener
+    }
+
+    override fun sendMessage(message: String) {
+        observeWebSocketWork { values ->
+            val webSocket = values[WebSocketWorker.WEB_SOCKET] as WebSocket
+            webSocket.send(message)
+        }
     }
 
     override fun observeWebSocketState(onStateChanged: (WebSocketState) -> Unit) {

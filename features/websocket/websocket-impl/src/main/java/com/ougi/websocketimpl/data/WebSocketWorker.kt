@@ -34,6 +34,7 @@ class WebSocketWorker @AssistedInject constructor(
 
         webSocketListener.webSocketStateStateFlow.collect { state ->
             setProgress(workDataOf(STATE to state))
+            setProgress(workDataOf(WEB_SOCKET to webSocketListener.currentWebSocket))
         }
     }
 
@@ -56,8 +57,9 @@ class WebSocketWorker @AssistedInject constructor(
     companion object {
         private const val CONTEXT = "context"
         private const val PARAMS = "params"
+        const val WEB_SOCKET = "web_socket"
         const val MESSAGE = "message"
-        const val STATE = "STATE"
+        const val STATE = "state"
         const val WEB_SOCKET_WORK_NAME = "WebSocketWork"
     }
 }

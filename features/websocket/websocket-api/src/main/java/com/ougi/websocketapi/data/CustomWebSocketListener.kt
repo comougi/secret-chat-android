@@ -1,9 +1,11 @@
 package com.ougi.websocketapi.data
 
 import kotlinx.coroutines.flow.StateFlow
+import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
 abstract class CustomWebSocketListener : WebSocketListener() {
+    abstract var currentWebSocket: WebSocket?
     abstract val webSocketStateStateFlow: StateFlow<WebSocketState>
     abstract val onMessageStateFlow: StateFlow<String?>
 

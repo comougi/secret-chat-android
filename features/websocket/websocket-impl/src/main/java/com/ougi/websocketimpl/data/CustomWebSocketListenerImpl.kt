@@ -13,6 +13,9 @@ import okhttp3.WebSocket
 class CustomWebSocketListenerImpl @AssistedInject constructor(
     @Assisted(ON_FAILURE) private val onFailure: () -> Unit
 ) : CustomWebSocketListener() {
+
+    override var currentWebSocket: WebSocket? = null
+
     override val webSocketStateStateFlow: MutableStateFlow<WebSocketState> =
         MutableStateFlow(WebSocketState.CONNECTING)
 
@@ -20,18 +23,21 @@ class CustomWebSocketListenerImpl @AssistedInject constructor(
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
+        currentWebSocket = webSocket
         Log.d(TAG, "onOpen")
         webSocketStateStateFlow.value = WebSocketState.CONNECTED
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
+        currentWebSocket = webSocket
         onMessageStateFlow.value = text
         Log.d("WS_DATA", text)
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosed(webSocket, code, reason)
+        currentWebSocket = webSocket
         Log.d(TAG, "onClosed")
         webSocketStateStateFlow.value = WebSocketState.CLOSED
         onFailure()
@@ -39,6 +45,7 @@ class CustomWebSocketListenerImpl @AssistedInject constructor(
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
+        currentWebSocket = webSocket
         Log.d(TAG, "onFailure")
         webSocketStateStateFlow.value = WebSocketState.CLOSED
         onFailure()

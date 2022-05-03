@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    kotlin("plugin.serialization") version "1.6.10"
 }
 
 android {
@@ -54,6 +55,10 @@ dependencies {
 
     //coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+
+    //serialization
+    val serializationVersion = "1.3.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")
