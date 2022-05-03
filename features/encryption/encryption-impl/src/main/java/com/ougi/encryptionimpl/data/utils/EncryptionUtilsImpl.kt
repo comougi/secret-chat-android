@@ -40,11 +40,11 @@ class EncryptionUtilsImpl @Inject constructor(
 
     override fun encryptViaSecretKey(
         data: String,
-        secretKey: SecretKey,
+        key: SecretKey,
         iv: ByteArray
     ): Pair<String, ByteArray> {
         val ivParameterSpec = IvParameterSpec(iv)
-        aesCipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec)
+        aesCipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec)
         return aesCipherDoFinal(data)
     }
 
@@ -54,8 +54,8 @@ class EncryptionUtilsImpl @Inject constructor(
     }
 
 
-    override fun decryptViaSecretKey(data: String, secretKey: SecretKey): String {
-        aesCipher.init(Cipher.DECRYPT_MODE, secretKey)
+    override fun decryptViaSecretKey(data: String, key: SecretKey): String {
+        aesCipher.init(Cipher.DECRYPT_MODE, key)
         return aesCipherDoFinal(data).first
     }
 

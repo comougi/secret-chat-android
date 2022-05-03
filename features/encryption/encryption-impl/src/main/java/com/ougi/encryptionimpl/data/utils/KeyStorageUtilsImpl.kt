@@ -6,46 +6,64 @@ import com.ougi.datastoreapi.data.DataStoreClientApi
 import com.ougi.datastoreapi.data.read
 import com.ougi.datastoreapi.data.write
 import com.ougi.encryptionapi.data.utils.KeyStorageUtils
+import com.ougi.encryptionapi.data.utils.KeyUtils
 import kotlinx.coroutines.flow.first
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.spec.X509EncodedKeySpec
 import javax.inject.Inject
 
-class KeyStorageUtilsImpl @Inject constructor(private val dataStoreClientApi: DataStoreClientApi) :
-    KeyStorageUtils {
+class KeyStorageUtilsImpl @Inject constructor(
+    private val dataStoreClientApi: DataStoreClientApi,
+    private val keyUtils: KeyUtils
+) : KeyStorageUtils {
+
+    override suspend fun savePassword(password: String) {
+        dataStoreClientApi.write(PASS_ENCRYPTED, password)
+    }
+
+    override suspend fun readPassword(): String {
+        val password = dataStoreClientApi.read<String, String>(PASS_ENCRYPTED).first()
+        return requireNotNull(password) { "Password didn't set" }
+    }
 
     override suspend fun saveDhKeyPair(public: String, private: String) {
-        saveKey(DH_PUBLIC_KEY_ENCRYPTED, public)
-        saveKey(DH_PRIVATE_KEY_ENCRYPTED, private)
+        dataStoreClientApi.write(DH_PUBLIC_KEY_ENCRYPTED, public)
+        dataStoreClientApi.write(DH_PRIVATE_KEY_ENCRYPTED, private)
     }
 
     override suspend fun saveRsaKeyPair(public: String, private: String) {
-        saveKey(RSA_PUBLIC_KEY_ENCRYPTED, public)
-        saveKey(RSA_PRIVATE_KEY_ENCRYPTED, private)
-    }
-
-    private suspend fun saveKey(dataStoreKey: Preferences.Key<String>, key: String) {
-        dataStoreClientApi.write(dataStoreKey, key)
+        dataStoreClientApi.write(RSA_PUBLIC_KEY_ENCRYPTED, public)
+        dataStoreClientApi.write(RSA_PRIVATE_KEY_ENCRYPTED, private)
     }
 
     override suspend fun readDhKeyPair(): KeyPair =
         readKeyPair(DH_PUBLIC_KEY_ENCRYPTED, DH_PRIVATE_KEY_ENCRYPTED, "DH")
+            ?: keyUtils.generateDHKeyPair().also { keyPair ->
+                val publicKeyString = keyPair.public.encoded.decodeToString()
+                val privateKeyString = keyPair.private.encoded.decodeToString()
+                saveDhKeyPair(publicKeyString, privateKeyString)
+            }
 
 
     override suspend fun readRsaKeyPair(): KeyPair =
         readKeyPair(RSA_PUBLIC_KEY_ENCRYPTED, RSA_PRIVATE_KEY_ENCRYPTED, "RSA")
+            ?: keyUtils.generateRsaKeyPair().also { keyPair ->
+                val publicKeyString = keyPair.public.encoded.decodeToString()
+                val privateKeyString = keyPair.private.encoded.decodeToString()
+                saveRsaKeyPair(publicKeyString, privateKeyString)
+            }
 
 
     private suspend fun readKeyPair(
         publicDataStoreKey: Preferences.Key<String>,
         privateDataStoreKey: Preferences.Key<String>,
         keyFactoryAlgorithm: String
-    ): KeyPair {
+    ): KeyPair? {
         val publicKeyStr = dataStoreClientApi.read<String, String>(publicDataStoreKey).first()
         val privateKeyStr = dataStoreClientApi.read<String, String>(privateDataStoreKey).first()
         if (publicKeyStr == null || privateKeyStr == null)
-            throw NullPointerException("${keyFactoryAlgorithm}KeyPair did not saved yet")
+            return null
 
         val kf = KeyFactory.getInstance(keyFactoryAlgorithm)
         val publicKeyBytes = publicKeyStr.encodeToByteArray()
@@ -56,6 +74,8 @@ class KeyStorageUtilsImpl @Inject constructor(private val dataStoreClientApi: Da
     }
 
     companion object {
+        private const val PASS_NAME = "Password"
+        val PASS_ENCRYPTED = stringPreferencesKey(PASS_NAME)
         private const val RSA_PRIVATE_KEY_NAME = "PrivateRsaKey"
         val RSA_PRIVATE_KEY_ENCRYPTED = stringPreferencesKey(RSA_PRIVATE_KEY_NAME)
         private const val RSA_PUBLIC_KEY_NAME = "PublicRsaKey"
