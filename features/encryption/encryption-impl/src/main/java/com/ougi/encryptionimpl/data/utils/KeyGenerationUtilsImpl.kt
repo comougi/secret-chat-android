@@ -1,7 +1,8 @@
 package com.ougi.encryptionimpl.data.utils
 
 import com.ougi.encryptionapi.data.utils.HashUtils
-import com.ougi.encryptionapi.data.utils.KeyUtils
+import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
+import com.ougi.passwordscreenapi.data.PasswordScreenStarter
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
@@ -13,20 +14,32 @@ import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
-class KeyUtilsImpl @Inject constructor(private val hashUtils: HashUtils) : KeyUtils {
+class KeyGenerationUtilsImpl @Inject constructor(
+    private val hashUtils: HashUtils,
+    private val passwordScreenStarter: PasswordScreenStarter
+) : KeyGenerationUtils {
 
     override var secretKey: SecretKey? = null
+        get() {
+            if (field == null)
+                passwordScreenStarter.startPasswordScreen()
+            return field
+        }
 
-    override fun setAesKeyFromPass(pass: String): SecretKey {
+    override fun createAesKeyFromPass(pass: String): SecretKey {
         val salt = hashUtils.getSalt(pass)
         val passCharArray = pass.toCharArray()
 
         val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
-        val spec = PBEKeySpec(passCharArray, salt, 2048, 512)
+        val spec = PBEKeySpec(passCharArray, salt, 2048, 256)
 
         val key = factory.generateSecret(spec)
         return SecretKeySpec(key.encoded, "AES")
-            .also { secretKey = it }
+    }
+
+    override fun setAesKey(key: SecretKey) {
+        secretKey = key
+        INSTANCE = this
     }
 
     override fun generateRsaKeyPair(): KeyPair {
@@ -48,6 +61,15 @@ class KeyUtilsImpl @Inject constructor(private val hashUtils: HashUtils) : KeyUt
 
         val key = keyAgreement.generateSecret()
         return SecretKeySpec(key, "AES")
+    }
+
+    companion object {
+
+        private var INSTANCE: KeyGenerationUtils? = null
+
+        fun getInstance(keyGenerationUtils: KeyGenerationUtils): KeyGenerationUtils {
+            return INSTANCE ?: keyGenerationUtils.also { INSTANCE = it }
+        }
     }
 
 }

@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":core:network:network-impl"))
 //    implementation(project(":core:db:db-api"))
 //    implementation(project(":core:db:db-impl"))
+    implementation(project(":core:ui"))
     implementation(project(":features:workmanager-initializer"))
     implementation(project(":features:websocket:websocket-api"))
     implementation(project(":features:websocket:websocket-impl"))
@@ -55,6 +56,8 @@ dependencies {
     implementation(project(":features:encryption:encryption-impl"))
     implementation(project(":features:datastore:datastore-api"))
     implementation(project(":features:datastore:datastore-impl"))
+    implementation(project(":screens:password-screen:password-screen-api"))
+    implementation(project(":screens:password-screen:password-screen-impl"))
 
     //dagger
     implementation("com.google.dagger:dagger:2.41")

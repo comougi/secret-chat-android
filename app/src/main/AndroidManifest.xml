@@ -23,8 +23,11 @@
                 tools:node="remove" />
         </provider>
         <activity
+            android:configChanges="orientation"
+            android:exported="true"
             android:name="com.ougi.secretchat.presentation.MainActivity"
-            android:exported="true">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <nav-graph android:value="@navigation/main_nav_graph" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

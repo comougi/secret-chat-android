@@ -9,8 +9,13 @@
         android:id="@+id/mainFragment"
         android:name="com.ougi.secretchat.presentation.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+        <deepLink app:uri="https://www.scsc.com/chat/" />
+    </fragment>
 
     <!--TODO : add all feature graphs here-->
+
+    <include app:graph="@navigation/password_screen_nav_graph" />
+
 
 </navigation>

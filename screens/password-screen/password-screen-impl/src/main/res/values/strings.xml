@@ -1,0 +1,7 @@
+<resources>
+    <string name="enter_password">Enter your password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_password_again">Enter the password again</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="wrong_password">Wrong password!</string>
+</resources>

@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":features:encryption:encryption-api"))
     implementation(project(":features:datastore:datastore-api"))
+    implementation(project(":screens:password-screen:password-screen-api"))
 
     //dagger
     implementation("com.google.dagger:dagger:2.41")

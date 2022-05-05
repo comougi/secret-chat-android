@@ -14,7 +14,7 @@ class HashUtilsImpl @Inject constructor() : HashUtils {
         val messageDigest = MessageDigest.getInstance("SHA-512")
         messageDigest.update(getSalt(from))
 
-        val bytes = messageDigest.digest(from.toByteArray())
+        val bytes = messageDigest.digest(Base64.decode(from, Base64.DEFAULT))
 
         val sha512Hash = bytes.joinToString("") { byte ->
             ((byte and 0xff.toByte()) + 0x100)

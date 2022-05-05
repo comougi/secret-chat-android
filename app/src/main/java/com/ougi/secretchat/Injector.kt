@@ -6,12 +6,18 @@ import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
 import com.ougi.coreutils.utils.ContextProvider
+import com.ougi.datastoreapi.data.DataStoreClientApi
 import com.ougi.datastoreimpl.di.DataStoreFeatureComponentHolder
 import com.ougi.datastoreimpl.di.DataStoreFeatureDeps
+import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
+import com.ougi.encryptionapi.data.utils.KeyStorageUtils
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
 import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
+import com.ougi.passwordscreenapi.data.PasswordScreenStarter
+import com.ougi.passwordscreenimpl.di.PasswordScreenComponentHolder
+import com.ougi.passwordscreenimpl.di.PasswordScreenDeps
 import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
@@ -36,6 +42,9 @@ object Injector {
         injectDataStoreFeatureComponent()
         injectWorkManagerInitializerComponent()
         injectWebSocketFeatureComponent()
+
+        //screens
+        injectPasswordScreenComponent()
     }
 
     private fun injectAppComponent() {
@@ -138,6 +147,10 @@ object Injector {
                 override val depsFactory: (DepsHolder<EncryptionFeatureDeps>) -> EncryptionFeatureDeps =
                     { depsHolder ->
                         object : EncryptionFeatureDeps {
+                            override val dataStoreClientApi: DataStoreClientApi
+                                get() = DataStoreFeatureComponentHolder.getInstance().dataStoreClientApi
+                            override val passwordScreenStarter: PasswordScreenStarter
+                                get() = PasswordScreenComponentHolder.getInstance().passwordScreenStarter
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -151,6 +164,27 @@ object Injector {
                 override val depsFactory: (DepsHolder<DataStoreFeatureDeps>) -> DataStoreFeatureDeps =
                     { depsHolder ->
                         object : DataStoreFeatureDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    //screens
+
+    private fun injectPasswordScreenComponent() {
+        PasswordScreenComponentHolder.depsProvider = {
+            object : DepsHolder<PasswordScreenDeps> {
+                override val depsFactory: (DepsHolder<PasswordScreenDeps>) -> PasswordScreenDeps =
+                    { depsHolder ->
+                        object : PasswordScreenDeps {
+                            override val keyStorageUtils: KeyStorageUtils
+                                get() = EncryptionFeatureComponentHolder.getInstance().keyStorageUtils
+                            override val keyGenerationUtils: KeyGenerationUtils
+                                get() = EncryptionFeatureComponentHolder.getInstance().keyGenerationUtils
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
