@@ -5,13 +5,8 @@ import dagger.Component
 import javax.inject.Singleton
 
 @[Component(
-    modules = [
-        CoreNetworkBindsModule::class,
-        CoreNetworkProvidesModule::class
-    ],
-    dependencies = [
-        CoreNetworkDeps::class
-    ]
+    modules = [CoreNetworkModule::class],
+    dependencies = [CoreNetworkDeps::class]
 ) Singleton]
 interface CoreNetworkComponent : CoreNetworkApi {
 
