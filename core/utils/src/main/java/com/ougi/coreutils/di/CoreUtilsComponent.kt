@@ -4,6 +4,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @[Component(
+    modules = [CoreUtilsModule::class],
     dependencies = [CoreUtilsDeps::class]
 ) Singleton]
 interface CoreUtilsComponent : CoreUtilsApi {
