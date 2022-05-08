@@ -1,6 +1,10 @@
 package com.ougi.secretchat
 
 import android.content.Context
+import com.ougi.chatlistscreenimpl.di.ChatListScreenComponentHolder
+import com.ougi.chatlistscreenimpl.di.ChatListScreenDeps
+import com.ougi.chatrepoimpl.di.ChatRepositoryComponentHolder
+import com.ougi.chatrepoimpl.di.ChatRepositoryDeps
 import com.ougi.corecommon.base.di.BaseFeatureDeps
 import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
@@ -13,6 +17,7 @@ import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
 import com.ougi.encryptionapi.data.utils.KeyStorageUtils
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
 import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
+import com.ougi.networkapi.data.NetworkClientApi
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.passwordscreenapi.data.PasswordScreenStarter
@@ -21,6 +26,8 @@ import com.ougi.passwordscreenimpl.di.PasswordScreenDeps
 import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
+import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryComponentHolder
+import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryDeps
 import com.ougi.websocketapi.data.WebSocketWorkerFactory
 import com.ougi.websocketimpl.di.WebSocketFeatureComponentHolder
 import com.ougi.websocketimpl.di.WebSocketFeatureDeps
@@ -45,6 +52,11 @@ object Injector {
 
         //screens
         injectPasswordScreenComponent()
+        injectChatListScreenComponent()
+
+        //repositories
+        injectChatRepositoryComponent()
+        injectServerInfoRepositoryComponent()
     }
 
     private fun injectAppComponent() {
@@ -173,7 +185,9 @@ object Injector {
         }
     }
 
-    //screens
+    /**
+    Screen modules injection
+     **/
 
     private fun injectPasswordScreenComponent() {
         PasswordScreenComponentHolder.depsProvider = {
@@ -187,6 +201,55 @@ object Injector {
                                 get() = EncryptionFeatureComponentHolder.getInstance().keyGenerationUtils
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectChatListScreenComponent() {
+        ChatListScreenComponentHolder.depsProvider = {
+            object : DepsHolder<ChatListScreenDeps> {
+                override val depsFactory: (DepsHolder<ChatListScreenDeps>) -> ChatListScreenDeps =
+                    { depsHolder ->
+                        object : ChatListScreenDeps {
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    /**
+    Repository modules injection
+     **/
+
+    private fun injectChatRepositoryComponent() {
+        ChatRepositoryComponentHolder.depsProvider = {
+            object : DepsHolder<ChatRepositoryDeps> {
+                override val depsFactory: (DepsHolder<ChatRepositoryDeps>) -> ChatRepositoryDeps =
+                    { depsHolder ->
+                        object : ChatRepositoryDeps {
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectServerInfoRepositoryComponent() {
+        ServerInfoRepositoryComponentHolder.depsProvider = {
+            object : DepsHolder<ServerInfoRepositoryDeps> {
+                override val depsFactory: (DepsHolder<ServerInfoRepositoryDeps>) -> ServerInfoRepositoryDeps =
+                    { depsHolder ->
+                        object : ServerInfoRepositoryDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val dataStoreClientApi: DataStoreClientApi
+                                get() = DataStoreFeatureComponentHolder.getInstance().dataStoreClientApi
+                            override val networkClientApi: NetworkClientApi
+                                get() = CoreNetworkComponentHolder.getInstance().networkClientApi
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }

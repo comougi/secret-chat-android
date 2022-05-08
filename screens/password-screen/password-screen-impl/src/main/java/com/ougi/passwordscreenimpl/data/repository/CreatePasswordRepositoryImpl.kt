@@ -8,8 +8,7 @@ import javax.inject.Inject
 class CreatePasswordRepositoryImpl @Inject constructor(
     private val keyStorageUtils: KeyStorageUtils,
     private val keyGenerationUtils: KeyGenerationUtils
-) :
-    CreatePasswordRepository {
+) : CreatePasswordRepository {
 
     override suspend fun createPassword(password: String) {
         val secretKey = keyGenerationUtils.createAesKeyFromPass(password)
@@ -17,7 +16,6 @@ class CreatePasswordRepositoryImpl @Inject constructor(
         keyStorageUtils.savePassword(password, secretKey)
         keyStorageUtils.readDhKeyPair()
         keyStorageUtils.readRsaKeyPair()
-
     }
 
 }

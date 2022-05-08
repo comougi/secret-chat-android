@@ -41,8 +41,10 @@ class WebSocketWorker @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(@Assisted(CONTEXT) context: Context, @Assisted(PARAMS) params: WorkerParameters)
-                : WebSocketWorker
+        fun create(
+            @Assisted(CONTEXT) context: Context,
+            @Assisted(PARAMS) params: WorkerParameters
+        ): WebSocketWorker
     }
 
     class WebSocketWorkerFactoryImpl @Inject constructor(private val factory: Factory) :
