@@ -47,15 +47,8 @@ dependencies {
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
-    //workmanager
-    val workVersion = "2.7.1"
-    implementation("androidx.work:work-runtime-ktx:$workVersion")
-
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
-
-    //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 
     //serialization
     val serializationVersion = "1.3.2"

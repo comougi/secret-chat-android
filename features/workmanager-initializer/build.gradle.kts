@@ -40,7 +40,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
     implementation(project(":repositories:server-info-repo:server-info-repo-api"))
-    implementation(project(":features:websocket:websocket-api"))
+    implementation(project(":features:messaging:messaging-api"))
 
     //workmanager
     val workVersion = "2.7.1"

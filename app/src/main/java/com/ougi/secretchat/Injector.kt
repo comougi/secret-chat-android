@@ -18,6 +18,9 @@ import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
 import com.ougi.encryptionapi.data.utils.KeyStorageUtils
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
 import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
+import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
+import com.ougi.messagingimpl.di.MessagingFeatureComponentHolder
+import com.ougi.messagingimpl.di.MessagingFeatureDeps
 import com.ougi.networkapi.data.NetworkClientApi
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
@@ -27,11 +30,12 @@ import com.ougi.passwordscreenimpl.di.PasswordScreenDeps
 import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
+import com.ougi.serverinforepoapi.data.repository.ServerInfoRepository
 import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryComponentHolder
 import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryDeps
 import com.ougi.userrepoimpl.di.UserRepositoryComponentHolder
 import com.ougi.userrepoimpl.di.UserRepositoryDeps
-import com.ougi.websocketapi.data.WebSocketWorkerFactory
+import com.ougi.websocketapi.data.WebSocketClientApi
 import com.ougi.websocketimpl.di.WebSocketFeatureComponentHolder
 import com.ougi.websocketimpl.di.WebSocketFeatureDeps
 import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerComponentHolder
@@ -52,6 +56,7 @@ object Injector {
         injectDataStoreFeatureComponent()
         injectWorkManagerInitializerComponent()
         injectWebSocketFeatureComponent()
+        injectMessagingFeatureComponent()
 
         //screens
         injectPasswordScreenComponent()
@@ -133,8 +138,8 @@ object Injector {
                         object : WorkManagerInititalizerDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
-                            override val webSocketWorkerFactory: WebSocketWorkerFactory
-                                get() = WebSocketFeatureComponentHolder.getInstance().webSocketWorkerFactory
+                            override val messagingFeatureWorkerFactory: MessagingFeatureWorkerFactory
+                                get() = MessagingFeatureComponentHolder.getInstance().messagingFeatureWorkerFactory
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -182,6 +187,25 @@ object Injector {
                         object : DataStoreFeatureDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectMessagingFeatureComponent() {
+        MessagingFeatureComponentHolder.depsProvider = {
+            object : DepsHolder<MessagingFeatureDeps> {
+                override val depsFactory: (DepsHolder<MessagingFeatureDeps>) -> MessagingFeatureDeps =
+                    { depsHolder ->
+                        object : MessagingFeatureDeps {
+                            override val context: Context
+                                get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
+                            override val serverInfoRepository: ServerInfoRepository
+                                get() = ServerInfoRepositoryComponentHolder.getInstance().serverInfoRepository
+                            override val webSocketClientApi: WebSocketClientApi
+                                get() = WebSocketFeatureComponentHolder.getInstance().webSocketClientApi
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }

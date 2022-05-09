@@ -41,13 +41,6 @@ dependencies {
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
 
-    //workmanager
-    val workVersion = "2.7.1"
-    implementation("androidx.work:work-runtime-ktx:$workVersion")
-
-    //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-
     //default
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")

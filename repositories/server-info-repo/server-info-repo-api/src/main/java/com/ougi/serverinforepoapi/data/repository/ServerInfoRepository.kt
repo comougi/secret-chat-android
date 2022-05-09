@@ -4,5 +4,5 @@ import com.ougi.coreutils.utils.Result
 import com.ougi.serverinforepoapi.data.entities.WebSocketInfo
 
 interface ServerInfoRepository {
-    suspend fun getWebSocketInfo(userId: String): Result<WebSocketInfo?>
+    suspend fun getWebSocketInfo(): Result<WebSocketInfo?>
 }

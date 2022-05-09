@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:network:network-api"))
     implementation(project(":repositories:server-info-repo:server-info-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
     implementation(project(":features:datastore:datastore-api"))
 
     //retrofit

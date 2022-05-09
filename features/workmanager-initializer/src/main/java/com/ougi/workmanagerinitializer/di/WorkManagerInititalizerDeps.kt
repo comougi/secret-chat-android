@@ -2,9 +2,9 @@ package com.ougi.workmanagerinitializer.di
 
 import android.content.Context
 import com.ougi.corecommon.base.di.BaseFeatureDeps
-import com.ougi.websocketapi.data.WebSocketWorkerFactory
+import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
 
 interface WorkManagerInititalizerDeps : BaseFeatureDeps {
     val context: Context
-    val webSocketWorkerFactory: WebSocketWorkerFactory
+    val messagingFeatureWorkerFactory: MessagingFeatureWorkerFactory
 }
