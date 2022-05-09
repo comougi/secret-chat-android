@@ -70,6 +70,8 @@ dependencies {
     implementation(project(":repositories:chat-repo:chat-repo-impl"))
     implementation(project(":repositories:server-info-repo:server-info-repo-api"))
     implementation(project(":repositories:server-info-repo:server-info-repo-impl"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-impl"))
 
     //dagger
     val daggerVersion = "2.41"

@@ -3,6 +3,7 @@ package com.ougi.encryptionimpl.data.utils
 import android.util.Base64
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.ougi.coreutils.utils.SeparationUtils
 import com.ougi.datastoreapi.data.DataStoreClientApi
 import com.ougi.datastoreapi.data.read
 import com.ougi.datastoreapi.data.write
@@ -26,9 +27,11 @@ class KeyStorageUtilsImpl @Inject constructor(
 
     override suspend fun savePassword(password: String, secretKey: SecretKey) {
         val passwordEncrypted = encryptionUtils.encryptViaSecretKey(password, secretKey)
-        val passwordToStore = passwordEncrypted.first +
-                SEPARATOR +
-                Base64.encodeToString(passwordEncrypted.second, Base64.DEFAULT)
+
+        val passwordToStore = SeparationUtils.separate(
+            passwordEncrypted.first,
+            Base64.encodeToString(passwordEncrypted.second, Base64.DEFAULT)
+        )
         dataStoreClientApi.write(PASS_ENCRYPTED, passwordToStore)
     }
 
@@ -39,7 +42,8 @@ class KeyStorageUtilsImpl @Inject constructor(
     override suspend fun readPassword(secretKey: SecretKey): String? {
         val passwordFromStore = dataStoreClientApi.read<String, String>(PASS_ENCRYPTED).first()
             ?: return null
-        val passwordSplitted = passwordFromStore.split(SEPARATOR)
+
+        val passwordSplitted = SeparationUtils.divide(passwordFromStore)
         val passwordStr = passwordSplitted[0]
         val passwordIv = Base64.decode(passwordSplitted[1], Base64.DEFAULT)
         return encryptionUtils.decryptViaSecretKey(passwordStr, secretKey, passwordIv)
@@ -83,11 +87,11 @@ class KeyStorageUtilsImpl @Inject constructor(
         if (publicKeyFromStore == null || privateKeyFromStore == null)
             return null
 
-        val publicKeySplitted = publicKeyFromStore.split(SEPARATOR)
+        val publicKeySplitted = SeparationUtils.divide(publicKeyFromStore)
         val publicKeyStr = publicKeySplitted[0]
         val publicKeyIv = Base64.decode(publicKeySplitted[1], Base64.DEFAULT)
 
-        val privateKeySplitted = privateKeyFromStore.split(SEPARATOR)
+        val privateKeySplitted = SeparationUtils.divide(privateKeyFromStore)
         val privateKeyStr = privateKeySplitted[0]
         val privateKeyIv = Base64.decode(privateKeySplitted[1], Base64.DEFAULT)
 
@@ -120,19 +124,19 @@ class KeyStorageUtilsImpl @Inject constructor(
         val privateKeyStringEncrypted =
             encryptionUtils.encryptViaSecretKey(privateKeyString, secretKey)
 
-        val public = publicKeyStringEncrypted.first +
-                SEPARATOR +
-                Base64.encodeToString(publicKeyStringEncrypted.second, Base64.DEFAULT)
+        val public = SeparationUtils.separate(
+            publicKeyStringEncrypted.first,
+            Base64.encodeToString(publicKeyStringEncrypted.second, Base64.DEFAULT)
+        )
 
-        val private = privateKeyStringEncrypted.first +
-                SEPARATOR +
-                Base64.encodeToString(privateKeyStringEncrypted.second, Base64.DEFAULT)
+        val private = SeparationUtils.separate(
+            privateKeyStringEncrypted.first,
+            Base64.encodeToString(privateKeyStringEncrypted.second, Base64.DEFAULT)
+        )
         return public to private
     }
 
     companion object {
-
-        private const val SEPARATOR = " !.!.! "
 
         private const val PASS_NAME = "Password"
         val PASS_ENCRYPTED = stringPreferencesKey(PASS_NAME)

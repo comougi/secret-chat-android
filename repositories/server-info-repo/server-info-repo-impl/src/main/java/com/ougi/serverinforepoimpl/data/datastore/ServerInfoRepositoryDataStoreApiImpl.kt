@@ -5,15 +5,15 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ougi.datastoreapi.data.DataStoreClientApi
 import com.ougi.datastoreapi.data.read
 import com.ougi.datastoreapi.data.write
-import com.ougi.serverinforepoapi.data.ServerInfoDataStoreApi
+import com.ougi.serverinforepoapi.data.datastore.ServerInfoRepositoryDataStoreApi
 import kotlinx.coroutines.flow.first
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
 import javax.inject.Inject
 
-class ServerInfoDataStoreApiImpl @Inject constructor(private val dataStoreClientApi: DataStoreClientApi) :
-    ServerInfoDataStoreApi {
+class ServerInfoRepositoryDataStoreApiImpl @Inject constructor(private val dataStoreClientApi: DataStoreClientApi) :
+    ServerInfoRepositoryDataStoreApi {
 
     override suspend fun savePublicKey(publicKey: String) {
         dataStoreClientApi.write(SERVER_PUBLIC_KEY, publicKey)

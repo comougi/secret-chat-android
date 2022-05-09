@@ -13,6 +13,7 @@ import com.ougi.coreutils.utils.ContextProvider
 import com.ougi.datastoreapi.data.DataStoreClientApi
 import com.ougi.datastoreimpl.di.DataStoreFeatureComponentHolder
 import com.ougi.datastoreimpl.di.DataStoreFeatureDeps
+import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
 import com.ougi.encryptionapi.data.utils.KeyStorageUtils
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
@@ -28,6 +29,8 @@ import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
 import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryComponentHolder
 import com.ougi.serverinforepoimpl.di.ServerInfoRepositoryDeps
+import com.ougi.userrepoimpl.di.UserRepositoryComponentHolder
+import com.ougi.userrepoimpl.di.UserRepositoryDeps
 import com.ougi.websocketapi.data.WebSocketWorkerFactory
 import com.ougi.websocketimpl.di.WebSocketFeatureComponentHolder
 import com.ougi.websocketimpl.di.WebSocketFeatureDeps
@@ -57,6 +60,7 @@ object Injector {
         //repositories
         injectChatRepositoryComponent()
         injectServerInfoRepositoryComponent()
+        injectUserRepositoryComponent()
     }
 
     private fun injectAppComponent() {
@@ -250,6 +254,27 @@ object Injector {
                                 get() = DataStoreFeatureComponentHolder.getInstance().dataStoreClientApi
                             override val networkClientApi: NetworkClientApi
                                 get() = CoreNetworkComponentHolder.getInstance().networkClientApi
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectUserRepositoryComponent() {
+        UserRepositoryComponentHolder.depsProvider = {
+            object : DepsHolder<UserRepositoryDeps> {
+                override val depsFactory: (DepsHolder<UserRepositoryDeps>) -> UserRepositoryDeps =
+                    { depsHolder ->
+                        object : UserRepositoryDeps {
+                            override val dataStoreClientApi: DataStoreClientApi
+                                get() = DataStoreFeatureComponentHolder.getInstance().dataStoreClientApi
+                            override val networkClientApi: NetworkClientApi
+                                get() = CoreNetworkComponentHolder.getInstance().networkClientApi
+                            override val encryptionClientApi: EncryptionClientApi
+                                get() = EncryptionFeatureComponentHolder.getInstance().encryptionClientApi
+                            override val keyStorageUtils: KeyStorageUtils
+                                get() = EncryptionFeatureComponentHolder.getInstance().keyStorageUtils
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }

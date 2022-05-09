@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface ServerInfoNetworkService : NetworkService {
+interface ServerInfoRepositoryNetworkService : NetworkService {
 
     @GET("webSocketInfo/{userId}")
     fun getWebSocketInfo(@Path("userId") userId: String): Call<WebSocketInfo>

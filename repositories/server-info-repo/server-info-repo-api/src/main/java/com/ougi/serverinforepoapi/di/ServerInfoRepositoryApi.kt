@@ -1,10 +1,12 @@
 package com.ougi.serverinforepoapi.di
 
 import com.ougi.corecommon.base.di.BaseFeatureApi
-import com.ougi.serverinforepoapi.data.ServerInfoDataStoreApi
-import com.ougi.serverinforepoapi.data.ServerInfoNetworkApi
+import com.ougi.serverinforepoapi.data.datastore.ServerInfoRepositoryDataStoreApi
+import com.ougi.serverinforepoapi.data.network.ServerInfoRepositoryNetworkApi
+import com.ougi.serverinforepoapi.data.repository.ServerInfoRepository
 
 interface ServerInfoRepositoryApi : BaseFeatureApi {
-    val serverInfoDataStoreApi: ServerInfoDataStoreApi
-    val serverInfoNetworkApi: ServerInfoNetworkApi
+    val serverInfoRepositoryDataStoreApi: ServerInfoRepositoryDataStoreApi
+    val serverInfoRepositoryNetworkApi: ServerInfoRepositoryNetworkApi
+    val serverInfoRepository: ServerInfoRepository
 }
