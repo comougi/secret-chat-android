@@ -43,6 +43,9 @@ dependencies {
     val serializationVersion = "1.3.2"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     //default
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")

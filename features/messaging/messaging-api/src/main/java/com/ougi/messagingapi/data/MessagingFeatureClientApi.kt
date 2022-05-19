@@ -1,6 +1,6 @@
 package com.ougi.messagingapi.data
 
-import com.ougi.websocketapi.data.WebSocketState
+import com.ougi.websocketapi.data.entities.WebSocketState
 
 interface MessagingFeatureClientApi {
     fun startMessagingWork(expedited: Boolean)

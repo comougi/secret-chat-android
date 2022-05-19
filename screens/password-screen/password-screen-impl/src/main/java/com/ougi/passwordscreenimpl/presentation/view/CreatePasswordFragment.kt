@@ -10,6 +10,7 @@ import com.ougi.passwordscreenimpl.R
 import com.ougi.passwordscreenimpl.databinding.FragmentPasswordBinding
 import com.ougi.passwordscreenimpl.di.PasswordScreenComponentHolder
 import com.ougi.passwordscreenimpl.presentation.viewmodel.CreatePasswordFragmentViewModel
+import com.ougi.ui.utils.ViewUtils.showAndHide
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +23,9 @@ class CreatePasswordFragment :
 
     @Inject
     lateinit var viewModelFactory: CreatePasswordFragmentViewModel.Factory
+
+    @Inject
+    lateinit var registrationDialogStarter: RegistrationDialogStarter
 
     private var firstPasswordInput: String? = null
     private var secondPasswordInput: String? = null
@@ -37,6 +41,17 @@ class CreatePasswordFragment :
         setPasswordEditTextParams()
     }
 
+    override fun onStart() {
+        super.onStart()
+        firstPasswordInput = null
+        secondPasswordInput = null
+        setDescriptionTextViewParams()
+        with(binding) {
+            passwordEditText.clearText()
+            errorTextView.visibility = View.GONE
+        }
+    }
+
     private fun setDescriptionTextViewParams() {
         with(binding.descriptionTextView) {
             setText(R.string.enter_new_password)
@@ -45,19 +60,17 @@ class CreatePasswordFragment :
 
     private fun setPasswordEditTextParams() {
         with(binding.passwordEditText) {
-            clearText()
             onInputFinished = { password ->
-                if (firstPasswordInput == null) {
-                    onFirstPasswordInput(password)
-                } else {
-                    onSecondPasswordInput(password)
-                }
+                binding.errorTextView.visibility = View.GONE
+                if (firstPasswordInput == null) onFirstPasswordInputFinished(password)
+                else onSecondPasswordInput(password)
             }
         }
     }
 
-    private fun onFirstPasswordInput(password: String) {
+    private fun onFirstPasswordInputFinished(password: String) {
         with(binding) {
+            passwordEditText.isFocusable = false
             lifecycleScope.launch {
                 firstPasswordInput = password
                 passwordEditText.updateTextColor(com.ougi.ui.R.color.success_green)
@@ -65,27 +78,33 @@ class CreatePasswordFragment :
                 passwordEditText.clearText()
                 descriptionTextView.setText(R.string.enter_password_again)
             }
+            passwordEditText.isFocusableInTouchMode = true
         }
     }
 
     private fun onSecondPasswordInput(password: String) {
+
         secondPasswordInput = password
         with(binding) {
+            passwordEditText.isFocusable = false
             lifecycleScope.launch {
                 if (firstPasswordInput == secondPasswordInput) {
                     passwordEditText.updateTextColor(com.ougi.ui.R.color.success_green)
                     viewModel.savePassword(password)
-                    (requireActivity() as PasswordScreenActivity).clearBackStack = false
-                    delay(500)
-                    requireActivity().onBackPressed()
+                    registrationDialogStarter.start(this@CreatePasswordFragment)
                 } else {
                     firstPasswordInput = null
                     secondPasswordInput = null
                     passwordEditText.updateTextColor(com.ougi.ui.R.color.error_red)
+                    errorTextView.setText(R.string.passwords_dont_match)
+                    launch {
+                        errorTextView.showAndHide(2000)
+                    }
                     delay(500)
                     passwordEditText.clearText()
                     descriptionTextView.setText(R.string.enter_new_password)
                 }
+                passwordEditText.isFocusableInTouchMode = true
             }
         }
     }

@@ -1,5 +1,5 @@
 package com.ougi.passwordscreenimpl.domain.repository
 
 interface CreatePasswordRepository {
-    suspend fun createPassword(password: String)
+    suspend fun savePassword(password: String)
 }

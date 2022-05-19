@@ -2,7 +2,7 @@ package com.ougi.websocketimpl.data
 
 import android.util.Log
 import com.ougi.websocketapi.data.CustomWebSocketListener
-import com.ougi.websocketapi.data.WebSocketState
+import com.ougi.websocketapi.data.entities.WebSocketState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -32,7 +32,7 @@ class CustomWebSocketListenerImpl @AssistedInject constructor(
         super.onMessage(webSocket, text)
         currentWebSocket = webSocket
         onMessageStateFlow.value = text
-        Log.d("WS_DATA", text)
+        Log.d(TAG, "onMessage : $text")
     }
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

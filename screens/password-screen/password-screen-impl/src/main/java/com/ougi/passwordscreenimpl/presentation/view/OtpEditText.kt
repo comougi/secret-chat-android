@@ -1,5 +1,6 @@
 package com.ougi.passwordscreenimpl.presentation.view
 
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,10 +8,13 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import com.ougi.passwordscreenimpl.R
+
 
 class OtpEditText : AppCompatEditText {
 
@@ -67,7 +71,6 @@ class OtpEditText : AppCompatEditText {
             setOnClick(view)
         }
     }
-
 
     private fun returnTextColor() {
         val density = context.resources.displayMetrics.density
@@ -134,7 +137,10 @@ class OtpEditText : AppCompatEditText {
         onClickListener?.onClick(view)
     }
 
+
     override fun onDraw(canvas: Canvas) {
+        showSoftInput()
+
         val availableWidth: Int = width - paddingRight - paddingLeft
         val charSize: Int =
             if (horizontalLineSpacing < 0) availableWidth / (numChars * 2 - 1)
@@ -183,6 +189,13 @@ class OtpEditText : AppCompatEditText {
                 else (charSize + horizontalLineSpacing)
         }
     }
+
+    private fun showSoftInput() {
+        requestFocus()
+        val imm: InputMethodManager? = getSystemService(context, InputMethodManager::class.java)
+        imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
 
     private fun isPasswordInputType(inputType: Int): Boolean {
         val variation =

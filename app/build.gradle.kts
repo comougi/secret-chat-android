@@ -56,8 +56,6 @@ dependencies {
     implementation(project(":features:websocket:websocket-impl"))
     implementation(project(":features:encryption:encryption-api"))
     implementation(project(":features:encryption:encryption-impl"))
-    implementation(project(":features:datastore:datastore-api"))
-    implementation(project(":features:datastore:datastore-impl"))
     implementation(project(":features:messaging:messaging-api"))
     implementation(project(":features:messaging:messaging-impl"))
 

@@ -1,21 +1,21 @@
 package com.ougi.passwordscreenimpl.data.repository
 
+import com.ougi.encryptionapi.data.KeyStorageApi
 import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
-import com.ougi.encryptionapi.data.utils.KeyStorageUtils
 import com.ougi.passwordscreenimpl.domain.repository.CreatePasswordRepository
 import javax.inject.Inject
 
 class CreatePasswordRepositoryImpl @Inject constructor(
-    private val keyStorageUtils: KeyStorageUtils,
+    private val keyStorageApi: KeyStorageApi,
     private val keyGenerationUtils: KeyGenerationUtils
 ) : CreatePasswordRepository {
 
-    override suspend fun createPassword(password: String) {
+    override suspend fun savePassword(password: String) {
         val secretKey = keyGenerationUtils.createAesKeyFromPass(password)
         keyGenerationUtils.setAesKey(secretKey)
-        keyStorageUtils.savePassword(password, secretKey)
-        keyStorageUtils.readDhKeyPair()
-        keyStorageUtils.readRsaKeyPair()
+        keyStorageApi.savePassword(password)
+        keyStorageApi.readDhKeyPair()
+        keyStorageApi.readRsaKeyPair()
     }
 
 }

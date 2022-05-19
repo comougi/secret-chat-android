@@ -2,6 +2,7 @@ package com.ougi.encryptionimpl.data.utils
 
 import android.util.Base64
 import com.ougi.encryptionapi.data.utils.EncryptionUtils
+import com.ougi.encryptionapi.data.utils.HashUtils
 import java.security.PrivateKey
 import java.security.PublicKey
 import javax.crypto.Cipher
@@ -9,7 +10,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.inject.Inject
 
-class EncryptionUtilsImpl @Inject constructor() : EncryptionUtils {
+class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) : EncryptionUtils {
 
     private val rsaCipher = Cipher.getInstance(RSA)
     private val aesCipher = Cipher.getInstance(AES)
@@ -35,6 +36,20 @@ class EncryptionUtilsImpl @Inject constructor() : EncryptionUtils {
         return aesCipherDoFinal(data).first
     }
 
+    override fun encryptViaSecretKeySeparated(data: String, key: SecretKey): String {
+        val encryptedData = encryptViaSecretKey(data, key)
+        val hash = hashUtils.getHmac(encryptedData.first, key)
+        return EncryptionSeparationUtils.separate(encryptedData.first, encryptedData.second, hash)
+    }
+
+    override fun decryptViaSecretKeyDivided(data: String, key: SecretKey): Pair<String, Boolean> {
+        val dividedData = EncryptionSeparationUtils.divide(data)
+        val encryptedData = dividedData.data
+        val iv = dividedData.iv
+        val isHashEquals = dividedData.hash.contentEquals(hashUtils.getHmac(encryptedData, key))
+        return decryptViaSecretKey(encryptedData, key, iv) to isHashEquals
+    }
+
     private fun rsaCipherDoFinal(data: String): String {
         val cipherBytes = doFinal(data, rsaCipher)
         return Base64.encodeToString(cipherBytes, Base64.DEFAULT)
@@ -49,6 +64,7 @@ class EncryptionUtilsImpl @Inject constructor() : EncryptionUtils {
         val bytes = Base64.decode(data, Base64.DEFAULT)
         return cipher.doFinal(bytes)
     }
+
 
     companion object {
         private const val RSA = "RSA/ECB/PKCS1Padding"

@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
 import javax.inject.Inject
 
-class MessagingFeatureWorkerFactoryImpl @Inject constructor(private val factory: MessageReceiverWorker.Factory) :
+class MessagingFeatureWorkerFactoryImpl @Inject constructor(private val factory: MessagingFeatureWorker.Factory) :
     MessagingFeatureWorkerFactory() {
 
     override fun createWorker(

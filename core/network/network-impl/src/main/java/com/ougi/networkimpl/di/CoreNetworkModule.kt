@@ -10,6 +10,7 @@ import dagger.Provides
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -23,7 +24,9 @@ internal interface CoreNetworkModule {
         @OptIn(ExperimentalSerializationApi::class)
         @[Singleton Provides]
         fun provideRetrofit(): Retrofit {
+            val okHttpClient = OkHttpClient.Builder().build()
             return Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl(Config.BASE_URL)
                 .addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
                 .build()

@@ -2,38 +2,32 @@ package com.ougi.userrepoimpl.data.repository
 
 import android.util.Base64
 import com.ougi.coreutils.utils.Result
-import com.ougi.coreutils.utils.SeparationUtils
 import com.ougi.encryptionapi.data.EncryptionClientApi
-import com.ougi.encryptionapi.data.utils.KeyStorageUtils
+import com.ougi.encryptionapi.data.KeyStorageApi
 import com.ougi.userrepoapi.data.datastore.UserRepositoryDataStoreApi
-import com.ougi.userrepoapi.data.entities.User
 import com.ougi.userrepoapi.data.network.UserRepositoryNetworkApi
 import com.ougi.userrepoapi.data.repository.UserRepository
-import java.util.*
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userRepositoryNetworkApi: UserRepositoryNetworkApi,
-    private val encryptionClientApi: EncryptionClientApi,
-    private val keyStorageUtils: KeyStorageUtils,
-    private val userRepositoryDataStoreApi: UserRepositoryDataStoreApi
+    private val keyStorageApi: KeyStorageApi,
+    private val userRepositoryDataStoreApi: UserRepositoryDataStoreApi,
+    private val encryptionClientApi: EncryptionClientApi
 ) : UserRepository {
 
-    override suspend fun register(): Result<User?> {
-        val id = UUID.randomUUID().toString()
-        val encryptedId = encryptionClientApi.encryptViaSecretKey(id)
-        val encryptedIdString =
-            SeparationUtils.separate(encryptedId.first, encryptedId.second.joinToString(""))
-
-        val publicKey = keyStorageUtils.readDhKeyPair().public
-        val publicKeyStr = Base64.encodeToString(publicKey.encoded, Base64.DEFAULT)
-
-        val user = User(encryptedIdString, publicKeyStr)
-
-        val userResult = userRepositoryNetworkApi.register(user)
+    override suspend fun register(): Result<String?> {
+        val publicKey = keyStorageApi.readDhKeyPair().public
+        val publicKeyStr = Base64.encodeToString(publicKey.encoded, Base64.NO_WRAP)
+        val userResult = userRepositoryNetworkApi.register(publicKeyStr)
 
         if (userResult is Result.Success) {
-            userRepositoryDataStoreApi.saveUserId(userResult.data!!.id)
+            val userIdEncrypted = userResult.data!!
+            val userIdDecrypted = encryptionClientApi.decryptViaDHAesKey(userIdEncrypted)
+            if (userIdDecrypted.second) {
+                userRepositoryDataStoreApi.saveUserId(userIdDecrypted.first)
+                return Result.Success(userIdDecrypted.first)
+            }
         }
         return userResult
     }

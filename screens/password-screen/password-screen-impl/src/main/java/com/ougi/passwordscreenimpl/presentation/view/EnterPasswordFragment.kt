@@ -24,6 +24,9 @@ class EnterPasswordFragment :
     @Inject
     lateinit var viewModelFactory: EnterPasswordFragmentViewModel.Factory
 
+    @Inject
+    lateinit var registrationDialogStarter: RegistrationDialogStarter
+
     override fun onAttach(context: Context) {
         PasswordScreenComponentHolder.getInstance().inject(this)
         super.onAttach(context)
@@ -61,9 +64,9 @@ class EnterPasswordFragment :
                     val isValid = viewModel.isPasswordValid(password)
                     if (isValid) {
                         updateTextColor(com.ougi.ui.R.color.success_green)
-                        (requireActivity() as PasswordScreenActivity).clearBackStack = false
-                        delay(500)
-                        requireActivity().onBackPressed()
+                        lifecycleScope.launch {
+                            registrationDialogStarter.start(this@EnterPasswordFragment)
+                        }
                     } else {
                         updateTextColor(com.ougi.ui.R.color.error_red)
                         binding.descriptionTextView.setText(R.string.enter_password_again)

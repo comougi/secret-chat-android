@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":features:encryption:encryption-api"))
     implementation(project(":screens:password-screen:password-screen-api"))
     implementation(project(":repositories:server-info-repo:server-info-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
 
     //dagger
     val daggerVersion = "2.41"

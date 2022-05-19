@@ -1,14 +1,14 @@
 package com.ougi.workmanagerinitializer.data.factory
 
 import androidx.work.DelegatingWorkerFactory
-import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
+import androidx.work.WorkerFactory
 import javax.inject.Inject
 
-class CustomWorkerFactory @Inject constructor(
-    messagingFeatureWorkerFactory: MessagingFeatureWorkerFactory
-) : DelegatingWorkerFactory() {
+class CustomWorkerFactory @Inject constructor(factories: Set<@JvmSuppressWildcards WorkerFactory>) :
+    DelegatingWorkerFactory() {
     init {
-        //add factories here
-        addFactory(messagingFeatureWorkerFactory)
+        factories.forEach { factory ->
+            addFactory(factory)
+        }
     }
 }

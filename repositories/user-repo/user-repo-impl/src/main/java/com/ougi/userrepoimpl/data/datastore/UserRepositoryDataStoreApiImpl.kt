@@ -1,22 +1,22 @@
 package com.ougi.userrepoimpl.data.datastore
 
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.ougi.datastoreapi.data.DataStoreClientApi
-import com.ougi.datastoreapi.data.read
-import com.ougi.datastoreapi.data.write
+import com.ougi.encryptionapi.data.EncryptedDataStoreApi
 import com.ougi.userrepoapi.data.datastore.UserRepositoryDataStoreApi
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class UserRepositoryDataStoreApiImpl @Inject constructor(private val dataStoreClientApi: DataStoreClientApi) :
+class UserRepositoryDataStoreApiImpl @Inject constructor(
+    private val encryptedDataStoreApi: EncryptedDataStoreApi
+) :
     UserRepositoryDataStoreApi {
 
     override suspend fun saveUserId(userId: String) {
-        dataStoreClientApi.write(USER_ID, userId)
+        encryptedDataStoreApi.write(USER_ID, userId)
     }
 
     override suspend fun readUserId(): String? {
-        return dataStoreClientApi.read<String, String>(USER_ID).first()
+        return encryptedDataStoreApi.read<String>(USER_ID).first()
     }
 
     companion object {

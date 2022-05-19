@@ -39,9 +39,9 @@ dependencies {
     //core
     implementation(project(":core:utils"))
     implementation(project(":core:common"))
+    implementation(project(":core:ui"))
     implementation(project(":core:network:network-api"))
     implementation(project(":repositories:user-repo:user-repo-api"))
-    implementation(project(":features:datastore:datastore-api"))
     implementation(project(":features:encryption:encryption-api"))
 
     //dagger
@@ -54,6 +54,10 @@ dependencies {
 
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    //serialization
+    val serializationVersion = "1.3.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")

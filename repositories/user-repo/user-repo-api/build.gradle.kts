@@ -39,6 +39,7 @@ dependencies {
     //core
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
+    implementation(project(":features:encryption:encryption-api"))
 
     //serialization
     val serializationVersion = "1.3.2"

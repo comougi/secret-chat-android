@@ -7,14 +7,8 @@ import com.ougi.passwordscreenimpl.data.repository.CreatePasswordRepositoryImpl
 import com.ougi.passwordscreenimpl.data.repository.EnterPasswordRepositoryImpl
 import com.ougi.passwordscreenimpl.domain.repository.CreatePasswordRepository
 import com.ougi.passwordscreenimpl.domain.repository.EnterPasswordRepository
-import com.ougi.passwordscreenimpl.domain.usecase.CreatePasswordUseCase
-import com.ougi.passwordscreenimpl.domain.usecase.CreatePasswordUseCaseImpl
-import com.ougi.passwordscreenimpl.domain.usecase.EnterPasswordUseCase
-import com.ougi.passwordscreenimpl.domain.usecase.EnterPasswordUseCaseImpl
-import com.ougi.passwordscreenimpl.presentation.viewmodel.CreatePasswordFragmentViewModel
-import com.ougi.passwordscreenimpl.presentation.viewmodel.CreatePasswordFragmentViewModelImpl
-import com.ougi.passwordscreenimpl.presentation.viewmodel.EnterPasswordFragmentViewModel
-import com.ougi.passwordscreenimpl.presentation.viewmodel.EnterPasswordFragmentViewModelImpl
+import com.ougi.passwordscreenimpl.domain.usecase.*
+import com.ougi.passwordscreenimpl.presentation.viewmodel.*
 import dagger.Binds
 import dagger.Module
 
@@ -42,4 +36,11 @@ interface PasswordScreenModule {
 
     @[Feature Binds]
     fun bindPasswordScreenStarter(passwordScreenStarterImpl: PasswordScreenStarterImpl): PasswordScreenStarter
+
+
+    @[Feature Binds]
+    fun bindUserRegistrationUseCase(userRegistrationUseCaseImpl: UserRegistrationUseCaseImpl): UserRegistrationUseCase
+
+    @[Feature Binds]
+    fun bindUserRegistrationViewModelFactory(factory: UserRegistrationViewModelImpl.Factory): UserRegistrationViewModel.Factory
 }

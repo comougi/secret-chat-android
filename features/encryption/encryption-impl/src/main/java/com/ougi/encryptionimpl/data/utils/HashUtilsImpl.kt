@@ -28,15 +28,15 @@ class HashUtilsImpl @Inject constructor() : HashUtils {
         return from.toCharArray().sorted().joinToString("").toByteArray()
     }
 
-    override fun getHmac(string: String, key: Key): String {
+    override fun getHmac(string: String, key: Key): ByteArray {
         val bytes = Base64.decode(string, Base64.DEFAULT)
         return getHmac(bytes, key)
     }
 
-    override fun getHmac(bytes: ByteArray, key: Key): String {
+    override fun getHmac(bytes: ByteArray, key: Key): ByteArray {
         val mac = Mac.getInstance("HmacSHA512")
         mac.init(key)
-        return Base64.encodeToString(mac.doFinal(bytes), Base64.DEFAULT)
+        return mac.doFinal(bytes)
     }
 
 }

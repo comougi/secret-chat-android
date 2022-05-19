@@ -4,6 +4,7 @@
     package="com.ougi.secretchat">
 
     <application
+        android:usesCleartextTraffic="true"
         android:name="com.ougi.secretchat.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,9 +24,9 @@
                 tools:node="remove" />
         </provider>
         <activity
+            android:name="com.ougi.secretchat.presentation.MainActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:name="com.ougi.secretchat.presentation.MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <nav-graph android:value="@navigation/main_nav_graph" />

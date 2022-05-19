@@ -41,6 +41,9 @@ dependencies {
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
 
+    //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+
     //default
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")

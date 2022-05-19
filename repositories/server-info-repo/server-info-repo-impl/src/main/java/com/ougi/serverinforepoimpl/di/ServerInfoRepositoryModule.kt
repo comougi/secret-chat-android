@@ -2,10 +2,8 @@ package com.ougi.serverinforepoimpl.di
 
 import com.ougi.coreutils.dagger.Repo
 import com.ougi.networkapi.data.NetworkClientApi
-import com.ougi.serverinforepoapi.data.datastore.ServerInfoRepositoryDataStoreApi
 import com.ougi.serverinforepoapi.data.network.ServerInfoRepositoryNetworkApi
 import com.ougi.serverinforepoapi.data.repository.ServerInfoRepository
-import com.ougi.serverinforepoimpl.data.datastore.ServerInfoRepositoryDataStoreApiImpl
 import com.ougi.serverinforepoimpl.data.network.ServerInfoRepositoryNetworkApiImpl
 import com.ougi.serverinforepoimpl.data.network.ServerInfoRepositoryNetworkService
 import com.ougi.serverinforepoimpl.data.repository.ServerInfoRepositoryImpl
@@ -15,9 +13,6 @@ import dagger.Provides
 
 @Module
 internal interface ServerInfoRepositoryModule {
-
-    @[Repo Binds]
-    fun bindServerInfoRepositoryDataStoreApi(serverInfoDataStoreImpl: ServerInfoRepositoryDataStoreApiImpl): ServerInfoRepositoryDataStoreApi
 
     @[Repo Binds]
     fun bindServerInfoRepositoryNetworkApi(serverInfoNetworkApiImpl: ServerInfoRepositoryNetworkApiImpl): ServerInfoRepositoryNetworkApi

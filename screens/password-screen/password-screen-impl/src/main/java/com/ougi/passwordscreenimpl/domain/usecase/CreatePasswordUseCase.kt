@@ -12,7 +12,6 @@ class CreatePasswordUseCaseImpl @Inject constructor(
 ) : CreatePasswordUseCase {
 
     override suspend fun savePassword(password: String) {
-        createPasswordRepository.createPassword(password)
+        createPasswordRepository.savePassword(password)
     }
-
 }

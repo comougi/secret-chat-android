@@ -40,7 +40,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:common"))
     implementation(project(":features:encryption:encryption-api"))
-    implementation(project(":features:datastore:datastore-api"))
+
     implementation(project(":screens:password-screen:password-screen-api"))
 
     //dagger

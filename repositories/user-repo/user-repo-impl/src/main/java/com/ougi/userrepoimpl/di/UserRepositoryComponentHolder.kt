@@ -14,5 +14,5 @@ object UserRepositoryComponentHolder : ComponentHolder<UserRepositoryApi, UserRe
     override var depsProvider: (() -> UserRepositoryDeps)? by componentHolderDelegate::depsProvider
 
     override fun getInstance(): UserRepositoryComponent =
-        componentHolderDelegate.depsProvider as UserRepositoryComponent
+        componentHolderDelegate.getInstance() as UserRepositoryComponent
 }

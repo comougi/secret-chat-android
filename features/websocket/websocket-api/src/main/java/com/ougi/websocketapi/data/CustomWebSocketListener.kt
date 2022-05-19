@@ -1,5 +1,6 @@
 package com.ougi.websocketapi.data
 
+import com.ougi.websocketapi.data.entities.WebSocketState
 import kotlinx.coroutines.flow.StateFlow
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener

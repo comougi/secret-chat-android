@@ -3,10 +3,7 @@ package com.ougi.encryptionimpl.data.utils
 import com.ougi.encryptionapi.data.utils.HashUtils
 import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
 import com.ougi.passwordscreenapi.data.PasswordScreenStarter
-import java.security.KeyPair
-import java.security.KeyPairGenerator
-import java.security.PrivateKey
-import java.security.PublicKey
+import java.security.*
 import javax.crypto.KeyAgreement
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
@@ -49,7 +46,7 @@ class KeyGenerationUtilsImpl @Inject constructor(
     }
 
     override fun generateDHKeyPair(): KeyPair {
-        val dhKeyPairGenerator = KeyPairGenerator.getInstance("DiffieHellman")
+        val dhKeyPairGenerator = KeyPairGenerator.getInstance("DH")
         dhKeyPairGenerator.initialize(512)
         return dhKeyPairGenerator.generateKeyPair()
     }
@@ -60,7 +57,9 @@ class KeyGenerationUtilsImpl @Inject constructor(
         keyAgreement.doPhase(publicKey, true)
 
         val key = keyAgreement.generateSecret()
-        return SecretKeySpec(key, "AES")
+        val sha256: MessageDigest = MessageDigest.getInstance("SHA-256")
+        val keyBytes: ByteArray = sha256.digest(key).copyOf(32)
+        return SecretKeySpec(keyBytes, "AES")
     }
 
     companion object {
