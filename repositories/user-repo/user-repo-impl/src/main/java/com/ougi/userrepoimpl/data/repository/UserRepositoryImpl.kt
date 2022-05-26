@@ -1,6 +1,7 @@
 package com.ougi.userrepoimpl.data.repository
 
 import android.util.Base64
+import android.util.Log
 import com.ougi.coreutils.utils.Result
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.encryptionapi.data.KeyStorageApi
@@ -23,7 +24,9 @@ class UserRepositoryImpl @Inject constructor(
 
         if (userResult is Result.Success) {
             val userIdEncrypted = userResult.data!!
+
             val userIdDecrypted = encryptionClientApi.decryptViaDHAesKey(userIdEncrypted)
+            Log.e("DATA", userIdDecrypted.first)
             if (userIdDecrypted.second) {
                 userRepositoryDataStoreApi.saveUserId(userIdDecrypted.first)
                 return Result.Success(userIdDecrypted.first)

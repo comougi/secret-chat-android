@@ -26,4 +26,5 @@ interface MessagingFeatureModule {
 
     @[Feature Binds]
     fun bindMessagingFeatureWorkerFactory(factory: MessagingFeatureWorkerFactoryImpl): MessagingFeatureWorkerFactory
+
 }

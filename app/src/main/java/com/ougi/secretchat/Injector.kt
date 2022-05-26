@@ -5,11 +5,11 @@ import com.ougi.chatlistscreenimpl.di.ChatListScreenComponentHolder
 import com.ougi.chatlistscreenimpl.di.ChatListScreenDeps
 import com.ougi.chatrepoimpl.di.ChatRepositoryComponentHolder
 import com.ougi.chatrepoimpl.di.ChatRepositoryDeps
+import com.ougi.corecommon.base.ScreenStarter
 import com.ougi.corecommon.base.di.BaseFeatureDeps
 import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
 import com.ougi.coreutils.di.CoreUtilsDeps
-import com.ougi.coreutils.utils.ContextProvider
 import com.ougi.encryptionapi.data.EncryptedDataStoreApi
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.encryptionapi.data.KeyStorageApi
@@ -25,7 +25,6 @@ import com.ougi.networkimpl.di.CoreNetworkDeps
 import com.ougi.passwordscreenapi.data.PasswordScreenStarter
 import com.ougi.passwordscreenimpl.di.PasswordScreenComponentHolder
 import com.ougi.passwordscreenimpl.di.PasswordScreenDeps
-import com.ougi.secretchat.data.ContextProviderImpl
 import com.ougi.secretchat.di.AppComponentHolder
 import com.ougi.secretchat.di.AppDeps
 import com.ougi.serverinforepoapi.data.repository.ServerInfoRepository
@@ -44,7 +43,7 @@ import com.ougi.workmanagerinitializer.di.WorkManagerInititalizerDeps
 object Injector {
 
     fun injectAll(context: Context) {
-        injectAppComponent()
+        injectAppComponent(context)
 
         //core
         injectCoreUtilsComponent(context)
@@ -67,11 +66,12 @@ object Injector {
         injectUserRepositoryComponent()
     }
 
-    private fun injectAppComponent() {
+    private fun injectAppComponent(context: Context) {
         AppComponentHolder.depsProvider = {
             object : DepsHolder<AppDeps> {
                 override val depsFactory: (DepsHolder<AppDeps>) -> AppDeps = { depsHolder ->
                     object : AppDeps {
+                        override val context: Context = context
                         override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                     }
                 }
@@ -89,8 +89,8 @@ object Injector {
                 override val depsFactory: (DepsHolder<CoreUtilsDeps>) -> CoreUtilsDeps =
                     { depsHolder ->
                         object : CoreUtilsDeps {
-                            override val contextProvider: ContextProvider =
-                                ContextProviderImpl(context)
+                            override val context: Context
+                                get() = context
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -215,6 +215,8 @@ object Injector {
                                 get() = UserRepositoryComponentHolder.getInstance().userRepository
                             override val userRepositoryDataStoreApi: UserRepositoryDataStoreApi
                                 get() = UserRepositoryComponentHolder.getInstance().userRepositoryDataStoreApi
+                            override val mainActivityStarter: ScreenStarter
+                                get() = AppComponentHolder.getInstance().mainActivityStarter
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder

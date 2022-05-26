@@ -4,6 +4,7 @@ import com.ougi.coreutils.dagger.Feature
 import com.ougi.passwordscreenapi.di.PasswordScreenApi
 import com.ougi.passwordscreenimpl.presentation.view.CreatePasswordFragment
 import com.ougi.passwordscreenimpl.presentation.view.EnterPasswordFragment
+import com.ougi.passwordscreenimpl.presentation.view.PasswordScreenActivity
 import com.ougi.passwordscreenimpl.presentation.view.RegistrationDialogStarter
 import dagger.Component
 
@@ -12,6 +13,7 @@ import dagger.Component
     dependencies = [PasswordScreenDeps::class]
 ) Feature]
 interface PasswordScreenComponent : PasswordScreenApi {
+    fun inject(passwordScreenActivity: PasswordScreenActivity)
     fun inject(createPasswordFragment: CreatePasswordFragment)
     fun inject(enterPasswordFragment: EnterPasswordFragment)
     fun inject(registrationDialogStarter: RegistrationDialogStarter)

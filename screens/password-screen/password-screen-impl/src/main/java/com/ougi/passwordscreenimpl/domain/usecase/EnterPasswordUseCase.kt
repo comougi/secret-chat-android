@@ -1,6 +1,6 @@
 package com.ougi.passwordscreenimpl.domain.usecase
 
-import com.ougi.passwordscreenimpl.domain.repository.EnterPasswordRepository
+import com.ougi.passwordscreenimpl.domain.repository.PasswordRepository
 import javax.inject.Inject
 
 interface EnterPasswordUseCase {
@@ -8,18 +8,18 @@ interface EnterPasswordUseCase {
     suspend fun isPasswordValid(password: String): Boolean
 }
 
-class EnterPasswordUseCaseImpl @Inject constructor(private val enterPasswordRepository: EnterPasswordRepository) :
+class EnterPasswordUseCaseImpl @Inject constructor(private val passwordRepository: PasswordRepository) :
     EnterPasswordUseCase {
     override suspend fun hasPassword(): Boolean {
-        return enterPasswordRepository.hasPassword()
+        return passwordRepository.isHasPassword()
     }
 
     override suspend fun isPasswordValid(password: String): Boolean {
-        val result = enterPasswordRepository.isPasswordValid(password)
+        val result = passwordRepository.isPasswordValid(password)
         val isValid = result.first
         if (isValid) {
             val secretKey = result.second!!
-            enterPasswordRepository.setAesKey(secretKey)
+            passwordRepository.setAesKey(secretKey)
         }
         return isValid
     }

@@ -1,6 +1,6 @@
 package com.ougi.passwordscreenimpl.domain.usecase
 
-import com.ougi.passwordscreenimpl.domain.repository.CreatePasswordRepository
+import com.ougi.passwordscreenimpl.domain.repository.PasswordRepository
 import javax.inject.Inject
 
 interface CreatePasswordUseCase {
@@ -8,10 +8,10 @@ interface CreatePasswordUseCase {
 }
 
 class CreatePasswordUseCaseImpl @Inject constructor(
-    private val createPasswordRepository: CreatePasswordRepository
+    private val passwordRepository: PasswordRepository
 ) : CreatePasswordUseCase {
 
     override suspend fun savePassword(password: String) {
-        createPasswordRepository.savePassword(password)
+        passwordRepository.savePassword(password)
     }
 }

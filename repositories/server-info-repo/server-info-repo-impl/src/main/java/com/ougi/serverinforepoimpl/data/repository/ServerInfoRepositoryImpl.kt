@@ -1,5 +1,6 @@
 package com.ougi.serverinforepoimpl.data.repository
 
+import android.util.Base64
 import com.ougi.coreutils.utils.Result
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.serverinforepoapi.data.network.ServerInfoRepositoryNetworkApi
@@ -13,18 +14,32 @@ class ServerInfoRepositoryImpl @Inject constructor(
     private val encryptionClientApi: EncryptionClientApi
 ) : ServerInfoRepository {
 
-    override suspend fun getWebSocketConnectionLink(): Result<String?> {
+    override suspend fun getMessagingWebSocketConnectionLink(): Result<String?> {
         val userId = userRepositoryDataStoreApi.readUserId() ?: return Result.Error()
+
         val webSocketLinkResult =
-            serverInfoRepositoryNetworkApi.getWebSocketConnectionLink(userId)
+            serverInfoRepositoryNetworkApi.getMessagingWebSocketConnectionLink(userId)
+
         if (webSocketLinkResult is Result.Success) {
             val encryptedWebSocketLink = webSocketLinkResult.data!!
             val decryptedWebSocketLink =
                 encryptionClientApi.decryptViaDHAesKey(encryptedWebSocketLink)
+            val decryptedWebSocketLinkBytes =
+                Base64.decode(decryptedWebSocketLink.first, Base64.DEFAULT)
+            val decryptedWebSocketLinkDecoded = decryptedWebSocketLinkBytes.decodeToString()
+
             if (decryptedWebSocketLink.second)
-                return Result.Success(decryptedWebSocketLink.first)
+                return Result.Success(decryptedWebSocketLinkDecoded)
         }
-        return Result.Error()
+        return webSocketLinkResult
+    }
+
+    override suspend fun getPushWebSocketConnectionLink(): Result<String?> {
+        val userId = userRepositoryDataStoreApi.readUserId() ?: return Result.Error()
+        val webSocketLinkResult =
+            serverInfoRepositoryNetworkApi.getPushWebSocketConnectionLink(userId)
+        return if (webSocketLinkResult is Result.Success) Result.Success(webSocketLinkResult.data)
+        else webSocketLinkResult
     }
 
 }

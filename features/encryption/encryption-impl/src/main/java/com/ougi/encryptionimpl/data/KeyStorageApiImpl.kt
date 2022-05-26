@@ -63,7 +63,7 @@ class KeyStorageApiImpl @Inject constructor(
 
     override suspend fun readDHAesKey(): SecretKey {
         val publicKeyStr = Config.SERVER_PUBLIC_KEY
-        val publicKeyBytes = Base64.decode(publicKeyStr, Base64.DEFAULT)
+        val publicKeyBytes = Base64.decode(publicKeyStr, Base64.NO_WRAP)
         val keyFactory = KeyFactory.getInstance("DH")
         val publicKey = keyFactory.generatePublic(X509EncodedKeySpec(publicKeyBytes))
         val privateKey = readDhKeyPair().private
@@ -82,8 +82,8 @@ class KeyStorageApiImpl @Inject constructor(
         if (publicKeyFromStore == null || privateKeyFromStore == null)
             return null
 
-        val publicKeyBytes = Base64.decode(publicKeyFromStore, Base64.DEFAULT)
-        val privateKeyBytes = Base64.decode(privateKeyFromStore, Base64.DEFAULT)
+        val publicKeyBytes = Base64.decode(publicKeyFromStore, Base64.NO_WRAP)
+        val privateKeyBytes = Base64.decode(privateKeyFromStore, Base64.NO_WRAP)
 
         val kf = KeyFactory.getInstance(keyFactoryAlgorithm)
 
@@ -93,7 +93,7 @@ class KeyStorageApiImpl @Inject constructor(
     }
 
     private fun encodeKeyToString(key: Key): String {
-        return Base64.encodeToString(key.encoded, Base64.DEFAULT)
+        return Base64.encodeToString(key.encoded, Base64.NO_WRAP)
     }
 
     companion object {

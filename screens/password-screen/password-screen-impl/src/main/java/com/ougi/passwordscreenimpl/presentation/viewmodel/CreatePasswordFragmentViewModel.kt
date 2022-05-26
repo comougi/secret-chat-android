@@ -6,7 +6,7 @@ import com.ougi.passwordscreenimpl.domain.usecase.CreatePasswordUseCase
 import javax.inject.Inject
 
 interface CreatePasswordFragmentViewModel {
-   suspend fun savePassword(password: String)
+    suspend fun savePassword(password: String)
     interface Factory : ViewModelProvider.Factory
 }
 
@@ -15,9 +15,7 @@ class CreatePasswordFragmentViewModelImpl(private val createPasswordUseCase: Cre
 
 
     override suspend fun savePassword(password: String) {
-        // viewModelScope.launch(Dispatchers.IO) {
         createPasswordUseCase.savePassword(password)
-        //}
     }
 
 

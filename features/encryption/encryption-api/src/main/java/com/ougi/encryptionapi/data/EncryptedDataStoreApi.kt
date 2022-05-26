@@ -14,7 +14,7 @@ import javax.crypto.SecretKey
 abstract class EncryptedDataStoreApi {
 
     abstract val encryptionUtils: EncryptionUtils
-    abstract val secretKey: SecretKey
+    abstract val secretKey: SecretKey?
     abstract val dataStore: DataStore<Preferences>
 
     inline fun <reified V> read(
@@ -24,7 +24,7 @@ abstract class EncryptedDataStoreApi {
         return dataStore.data.map { preferences ->
             preferences[key]?.let { value ->
                 val data = if (decrypt)
-                    encryptionUtils.decryptViaSecretKeyDivided(value, secretKey).first
+                    encryptionUtils.decryptViaSecretKeyDivided(value, secretKey!!).first
                 else
                     value
                 if (V::class.java != String::class.java) Json.decodeFromString(data)
@@ -42,7 +42,7 @@ abstract class EncryptedDataStoreApi {
             val data = if (value is String) value
             else Json.encodeToJsonElement(value).toString()
             preferences[key] =
-                if (encrypt) encryptionUtils.encryptViaSecretKeySeparated(data, secretKey)
+                if (encrypt) encryptionUtils.encryptViaSecretKeySeparated(data, secretKey!!)
                 else data
         }
     }

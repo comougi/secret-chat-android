@@ -3,10 +3,8 @@ package com.ougi.passwordscreenimpl.di
 import com.ougi.coreutils.dagger.Feature
 import com.ougi.passwordscreenapi.data.PasswordScreenStarter
 import com.ougi.passwordscreenimpl.PasswordScreenStarterImpl
-import com.ougi.passwordscreenimpl.data.repository.CreatePasswordRepositoryImpl
-import com.ougi.passwordscreenimpl.data.repository.EnterPasswordRepositoryImpl
-import com.ougi.passwordscreenimpl.domain.repository.CreatePasswordRepository
-import com.ougi.passwordscreenimpl.domain.repository.EnterPasswordRepository
+import com.ougi.passwordscreenimpl.data.repository.PasswordRepositoryImpl
+import com.ougi.passwordscreenimpl.domain.repository.PasswordRepository
 import com.ougi.passwordscreenimpl.domain.usecase.*
 import com.ougi.passwordscreenimpl.presentation.viewmodel.*
 import dagger.Binds
@@ -16,7 +14,15 @@ import dagger.Module
 interface PasswordScreenModule {
 
     @[Feature Binds]
-    fun bindCreatePasswordRepository(createPasswordRepositoryImpl: CreatePasswordRepositoryImpl): CreatePasswordRepository
+    fun bindPasswordRepository(passwordRepositoryImpl: PasswordRepositoryImpl): PasswordRepository
+
+
+    @[Feature Binds]
+    fun bindCheckHasPasswordUseCase(checkHasPasswordUseCaseImpl: CheckHasPasswordUseCaseImpl): CheckHasPasswordUseCase
+
+    @[Feature Binds]
+    fun bindPasswordActivityViewModelFactory(factory: PasswordScreenActivityViewModelImpl.Factory): PasswordScreenActivityViewModel.Factory
+
 
     @[Feature Binds]
     fun bindCreatePasswordUseCase(createPasswordUseCaseImpl: CreatePasswordUseCaseImpl): CreatePasswordUseCase
@@ -24,9 +30,6 @@ interface PasswordScreenModule {
     @[Feature Binds]
     fun bindCreatePasswordViewModelFactory(factory: CreatePasswordFragmentViewModelImpl.Factory): CreatePasswordFragmentViewModel.Factory
 
-
-    @[Feature Binds]
-    fun bindEnterPasswordRepository(enterPasswordRepositoryImpl: EnterPasswordRepositoryImpl): EnterPasswordRepository
 
     @[Feature Binds]
     fun bindEnterPasswordUseCase(enterPasswordUseCaseImpl: EnterPasswordUseCaseImpl): EnterPasswordUseCase
@@ -43,4 +46,5 @@ interface PasswordScreenModule {
 
     @[Feature Binds]
     fun bindUserRegistrationViewModelFactory(factory: UserRegistrationViewModelImpl.Factory): UserRegistrationViewModel.Factory
+
 }

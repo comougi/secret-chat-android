@@ -8,28 +8,27 @@ import retrofit2.awaitResponse
 
 object SafeApiCallUtils {
 
-    private val badResponseCodes = arrayOf(400, 401, 404)
-    suspend fun <T> safeApiCall(
+    val badResponseCodes = arrayOf(400, 401, 404)
+    suspend inline fun <reified T> safeApiCall(
         call: Call<T>,
         errorMessage: Any? = null,
-        successMessage: Any? = null
+        successMessage: Any? = null,
     ): Result<T?> {
         return try {
             call.awaitResponse().let { response ->
-                if (response.isSuccessful && !badResponseCodes.contains(response.code())) {
-                    Result.Success(response.body(), successMessage)
-                } else {
-                    Result.Error(response.body() ?: errorMessage)
-                }
+                val body = response.body()
+                if (response.isSuccessful && !badResponseCodes.contains(response.code()))
+                    Result.Success(body, successMessage)
+                else
+                    Result.Error(body ?: errorMessage)
             }
         } catch (e: Exception) {
-            Result.Error<T>(errorMessage).also {
-            }
+            Result.Error(errorMessage)
         }
     }
 
 
-    suspend fun <T> MutableStateFlow<Result<T?>>.safeApiCallStateFlow(
+    suspend inline fun <reified T> MutableStateFlow<Result<T?>>.safeApiCallStateFlow(
         call: Call<T>,
         errorMessage: Any? = null,
         loadingMessage: Any? = null,

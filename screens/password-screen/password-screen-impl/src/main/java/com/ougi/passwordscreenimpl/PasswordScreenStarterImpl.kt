@@ -6,14 +6,18 @@ import com.ougi.passwordscreenapi.data.PasswordScreenStarter
 import com.ougi.passwordscreenimpl.presentation.view.PasswordScreenActivity
 import javax.inject.Inject
 
+
 class PasswordScreenStarterImpl @Inject constructor(private val context: Context) :
     PasswordScreenStarter {
 
-    override fun startPasswordScreen() {
-        val intent = Intent(context, PasswordScreenActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
+    override fun startScreen() {
+        val intent = Intent(context, PasswordScreenActivity::class.java)
+            .apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                putExtra(PasswordScreenActivity.IS_ON_START, false)
+            }
         context.startActivity(intent)
     }
+
 
 }

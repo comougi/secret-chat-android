@@ -65,7 +65,10 @@ class EnterPasswordFragment :
                     if (isValid) {
                         updateTextColor(com.ougi.ui.R.color.success_green)
                         lifecycleScope.launch {
-                            registrationDialogStarter.start(this@EnterPasswordFragment)
+                            val isOnStart = requireArguments()
+                                .getBoolean(PasswordScreenActivity.IS_ON_START, false)
+                            registrationDialogStarter
+                                .start(this@EnterPasswordFragment, isOnStart)
                         }
                     } else {
                         updateTextColor(com.ougi.ui.R.color.error_red)

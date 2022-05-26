@@ -1,5 +1,5 @@
 package com.ougi.passwordscreenapi.data
 
-interface PasswordScreenStarter {
-    fun startPasswordScreen()
-}
+import com.ougi.corecommon.base.ScreenStarter
+
+interface PasswordScreenStarter : ScreenStarter

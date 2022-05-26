@@ -1,7 +1,6 @@
 package com.ougi.messagingimpl.data
 
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
 import androidx.work.*
 import com.ougi.messagingapi.data.MessagingFeatureClientApi
 import com.ougi.messagingimpl.data.workmanager.MessagingFeatureWorker
@@ -15,7 +14,7 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
 
     private val workManager by lazy { WorkManager.getInstance(context) }
 
-    override fun startMessagingWork(expedited: Boolean) {
+    override fun startMessagingWork(isInForeground: Boolean) {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -25,11 +24,14 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
                 setConstraints(constraints)
                 setBackoffCriteria(BackoffPolicy.LINEAR, 5, TimeUnit.SECONDS)
                 setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                if (expedited) setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                else setInitialDelay(5, TimeUnit.SECONDS)
+                setInputData(workDataOf(IS_IN_FOREGROUND to isInForeground))
             }.build()
 
-        workManager.enqueue(workRequest)
+        workManager.enqueueUniqueWork(
+            MessagingFeatureWorker.WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     override fun observeState(onStateChanged: (WebSocketState) -> Unit) {
@@ -46,17 +48,28 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
         }
     }
 
-    private fun observeReceivingWork(onProgressChanged: (Map<String, Any>) -> Unit) {
-        workManager.getWorkInfosByTagLiveData(MessagingFeatureWorker.WORK_NAME)
-            .observe(context as LifecycleOwner) { workInfos ->
-                if (!workInfos.isNullOrEmpty()
-                    && workInfos.any { info -> info.state == WorkInfo.State.RUNNING }
-                ) {
-                    val workInfo = workInfos
-                        .first { workInfo -> workInfo.state == WorkInfo.State.RUNNING }
-                    val progressValues = workInfo.progress.keyValueMap
-                    onProgressChanged(progressValues)
-                }
+    private fun observeWork(onWorkInfosChanged: (List<WorkInfo>?) -> Unit) {
+        workManager.getWorkInfosForUniqueWorkLiveData(MessagingFeatureWorker.WORK_NAME)
+            .observeForever { workInfos ->
+                onWorkInfosChanged(workInfos)
             }
+
+    }
+
+    private fun observeReceivingWork(onProgressChanged: (Map<String, Any>) -> Unit) {
+        observeWork { workInfos ->
+            if (!workInfos.isNullOrEmpty()
+                && workInfos.any { info -> info.state == WorkInfo.State.RUNNING }
+            ) {
+                val workInfo = workInfos
+                    .first { workInfo -> workInfo.state == WorkInfo.State.RUNNING }
+                val progressValues = workInfo.progress.keyValueMap
+                onProgressChanged(progressValues)
+            }
+        }
+    }
+
+    companion object {
+        const val IS_IN_FOREGROUND = "isInForeground"
     }
 }

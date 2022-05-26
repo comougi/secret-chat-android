@@ -91,7 +91,9 @@ class CreatePasswordFragment :
                 if (firstPasswordInput == secondPasswordInput) {
                     passwordEditText.updateTextColor(com.ougi.ui.R.color.success_green)
                     viewModel.savePassword(password)
-                    registrationDialogStarter.start(this@CreatePasswordFragment)
+                    val isOnStart = requireArguments()
+                        .getBoolean(PasswordScreenActivity.IS_ON_START, false)
+                    registrationDialogStarter.start(this@CreatePasswordFragment, isOnStart)
                 } else {
                     firstPasswordInput = null
                     secondPasswordInput = null

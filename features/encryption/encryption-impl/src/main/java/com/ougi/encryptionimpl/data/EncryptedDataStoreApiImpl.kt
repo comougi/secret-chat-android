@@ -18,7 +18,7 @@ class EncryptedDataStoreApiImpl @Inject constructor(
     private val keyGenerationUtils: KeyGenerationUtils,
     context: Context
 ) : EncryptedDataStoreApi() {
-    override val secretKey: SecretKey
-        get() = keyGenerationUtils.secretKey!!
+    override val secretKey: SecretKey?
+        get() = keyGenerationUtils.secretKey
     override val dataStore: DataStore<Preferences> = context.dataStore
 }

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class MessageReceiverImpl @Inject constructor() : MessageReceiver {
 
     override fun receiveMessage(message: String) {
-        Log.d("DATA", message)
+        Log.d("DATA", "MESSAGE $message")
     }
 
 }

@@ -17,11 +17,6 @@ class KeyGenerationUtilsImpl @Inject constructor(
 ) : KeyGenerationUtils {
 
     override var secretKey: SecretKey? = null
-        get() {
-            if (field == null)
-                passwordScreenStarter.startPasswordScreen()
-            return field
-        }
 
     override fun createAesKeyFromPass(pass: String): SecretKey {
         val salt = hashUtils.getSalt(pass)
