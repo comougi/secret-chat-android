@@ -5,13 +5,8 @@ import dagger.Component
 import javax.inject.Singleton
 
 @[Component(
-    modules = [
-        CoreDbBindsModule::class,
-        CoreDbProvidesModule::class
-    ],
-    dependencies = [
-        CoreDbDeps::class
-    ]
+    modules = [CoreDbModule::class],
+    dependencies = [CoreDbDeps::class]
 ) Singleton]
 interface CoreDbComponent : CoreDbApi {
 

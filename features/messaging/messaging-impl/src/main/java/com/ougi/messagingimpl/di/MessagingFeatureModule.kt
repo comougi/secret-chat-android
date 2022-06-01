@@ -11,6 +11,7 @@ import com.ougi.messagingimpl.data.MessagingFeatureClientApiImpl
 import com.ougi.messagingimpl.data.workmanager.MessagingFeatureWorkerFactoryImpl
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 
 @Module
 interface MessagingFeatureModule {
@@ -19,12 +20,15 @@ interface MessagingFeatureModule {
     fun bindMessageReceiver(messageReceiverImpl: MessageReceiverImpl): MessageReceiver
 
     @[Feature Binds]
-    fun bindMessageSender(messageSenderImpl: MessageSenderImpl): MessageSender
-
-    @[Feature Binds]
-    fun bindMessagingFeatureClientApiImpl(messagingFeatureClientApiImpl: MessagingFeatureClientApiImpl): MessagingFeatureClientApi
+    fun bindMessagingFeatureClientApi(messagingFeatureClientApiImpl: MessagingFeatureClientApiImpl): MessagingFeatureClientApi
 
     @[Feature Binds]
     fun bindMessagingFeatureWorkerFactory(factory: MessagingFeatureWorkerFactoryImpl): MessagingFeatureWorkerFactory
 
+    companion object {
+        @[Feature Provides]
+        fun provideMessageSender(): MessageSender {
+            return MessageSenderImpl.getInstance()
+        }
+    }
 }

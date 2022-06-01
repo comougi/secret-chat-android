@@ -8,6 +8,6 @@ import retrofit2.http.POST
 interface UserRepositoryNetworkService : NetworkService {
 
     @POST("register")
-    fun register(@Body publicKey: String): Call<String>
+    fun register(@Body() publicKey: String): Call<String>
 
 }

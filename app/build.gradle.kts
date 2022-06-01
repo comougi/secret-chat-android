@@ -46,8 +46,8 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:network:network-api"))
     implementation(project(":core:network:network-impl"))
-//    implementation(project(":core:db:db-api"))
-//    implementation(project(":core:db:db-impl"))
+    implementation(project(":core:db:db-api"))
+    implementation(project(":core:db:db-impl"))
     implementation(project(":core:ui"))
 
     //features

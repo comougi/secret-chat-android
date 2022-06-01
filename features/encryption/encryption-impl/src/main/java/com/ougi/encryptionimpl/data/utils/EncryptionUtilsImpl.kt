@@ -34,11 +34,12 @@ class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) 
         val ivParameterSpec = IvParameterSpec(iv)
         aesCipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec)
         return aesCipherDoFinal(data).first
+            .replace(" ", "").replace("\n", "")
     }
 
     override fun encryptViaSecretKeySeparated(data: String, key: SecretKey): String {
         val encryptedData = encryptViaSecretKey(data, key)
-        val hash = hashUtils.getHmac(encryptedData.first, key)
+        val hash = hashUtils.getHmac(data, key)
         return EncryptionSeparationUtils.separate(encryptedData.first, encryptedData.second, hash)
     }
 
@@ -46,8 +47,9 @@ class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) 
         val dividedData = EncryptionSeparationUtils.divide(data)
         val encryptedData = dividedData.data
         val iv = dividedData.iv
-        val isHashEquals = dividedData.hash.contentEquals(hashUtils.getHmac(encryptedData, key))
-        return decryptViaSecretKey(encryptedData, key, iv) to isHashEquals
+        val decryptedData = decryptViaSecretKey(encryptedData, key, iv)
+        val isHashEquals = dividedData.hash.contentEquals(hashUtils.getHmac(decryptedData, key))
+        return decryptedData to isHashEquals
     }
 
     private fun rsaCipherDoFinal(data: String): String {

@@ -1,6 +1,7 @@
 package com.ougi.serverinforepoimpl.data.repository
 
 import android.util.Base64
+import android.util.Log
 import com.ougi.coreutils.utils.Result
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.serverinforepoapi.data.network.ServerInfoRepositoryNetworkApi
@@ -16,9 +17,9 @@ class ServerInfoRepositoryImpl @Inject constructor(
 
     override suspend fun getMessagingWebSocketConnectionLink(): Result<String?> {
         val userId = userRepositoryDataStoreApi.readUserId() ?: return Result.Error()
-
-        val webSocketLinkResult =
-            serverInfoRepositoryNetworkApi.getMessagingWebSocketConnectionLink(userId)
+        val userIdEncrypted = encryptionClientApi.encryptViaDHAesKey(userId)
+        val webSocketLinkResult = serverInfoRepositoryNetworkApi
+            .getMessagingWebSocketConnectionLink(userId, userIdEncrypted)
 
         if (webSocketLinkResult is Result.Success) {
             val encryptedWebSocketLink = webSocketLinkResult.data!!
@@ -28,8 +29,10 @@ class ServerInfoRepositoryImpl @Inject constructor(
                 Base64.decode(decryptedWebSocketLink.first, Base64.DEFAULT)
             val decryptedWebSocketLinkDecoded = decryptedWebSocketLinkBytes.decodeToString()
 
-            if (decryptedWebSocketLink.second)
+            if (decryptedWebSocketLink.second) {
+                Log.d("DATA", "M WS LINK  $decryptedWebSocketLinkDecoded")
                 return Result.Success(decryptedWebSocketLinkDecoded)
+            }
         }
         return webSocketLinkResult
     }
@@ -38,8 +41,11 @@ class ServerInfoRepositoryImpl @Inject constructor(
         val userId = userRepositoryDataStoreApi.readUserId() ?: return Result.Error()
         val webSocketLinkResult =
             serverInfoRepositoryNetworkApi.getPushWebSocketConnectionLink(userId)
-        return if (webSocketLinkResult is Result.Success) Result.Success(webSocketLinkResult.data)
-        else webSocketLinkResult
+
+        return if (webSocketLinkResult is Result.Success) {
+            Log.d("DATA", "P WS LINK  ${webSocketLinkResult.data!!}")
+            Result.Success(webSocketLinkResult.data!!)
+        } else webSocketLinkResult
     }
 
 }

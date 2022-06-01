@@ -9,8 +9,12 @@ class ServerInfoRepositoryNetworkApiImpl @Inject constructor(
     private val serverInfoRepositoryNetworkService: ServerInfoRepositoryNetworkService
 ) : ServerInfoRepositoryNetworkApi {
 
-    override suspend fun getMessagingWebSocketConnectionLink(userId: String): Result<String?> {
-        val call = serverInfoRepositoryNetworkService.getMessagingWebSocketConnectionLink(userId)
+    override suspend fun getMessagingWebSocketConnectionLink(
+        userId: String,
+        userIdEncrypted: String
+    ): Result<String?> {
+        val call = serverInfoRepositoryNetworkService
+            .getMessagingWebSocketConnectionLink(userId, userIdEncrypted)
         return SafeApiCallUtils.safeApiCall(call)
     }
 

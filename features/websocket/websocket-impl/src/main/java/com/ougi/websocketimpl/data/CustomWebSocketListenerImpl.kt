@@ -6,12 +6,17 @@ import com.ougi.websocketapi.data.entities.WebSocketState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import okhttp3.Response
 import okhttp3.WebSocket
 
 class CustomWebSocketListenerImpl @AssistedInject constructor(
-    @Assisted(ON_FAILURE) private val onFailure: () -> Unit
+    @Assisted(ON_FAILURE) private val onFailure: () -> Unit,
+    @Assisted(ON_FAILURE_DELAY) private val onFailureDelay: Long
 ) : CustomWebSocketListener() {
 
     override var currentWebSocket: WebSocket? = null
@@ -48,16 +53,24 @@ class CustomWebSocketListenerImpl @AssistedInject constructor(
         currentWebSocket = webSocket
         Log.d(TAG, "onFailure")
         webSocketStateStateFlow.value = WebSocketState.CLOSED
-        onFailure()
+        CoroutineScope(Job()).launch {
+            delay(5000)
+            onFailure()
+        }
     }
 
     @AssistedFactory
     interface Factory : CustomWebSocketListener.Factory {
-        override fun create(@Assisted(ON_FAILURE) onFailure: () -> Unit): CustomWebSocketListenerImpl
+        override fun create(
+            @Assisted(ON_FAILURE) onFailure: () -> Unit,
+            @Assisted(ON_FAILURE_DELAY) onFailureDelay: Long
+        ): CustomWebSocketListenerImpl
     }
 
     companion object {
         private const val TAG = "WebSocketListener"
         private const val ON_FAILURE = "onFailure"
+        private const val ON_FAILURE_DELAY = "onFailureDelay"
+
     }
 }

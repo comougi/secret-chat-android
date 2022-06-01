@@ -39,12 +39,29 @@ dependencies {
     //import
     implementation(project(":core:common"))
     implementation(project(":core:utils"))
+    implementation(project(":core:network:network-api"))
+    implementation(project(":core:db:db-api"))
+    implementation(project(":features:encryption:encryption-api"))
     implementation(project(":repositories:chat-repo:chat-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
 
     //dagger
     val daggerVersion = "2.41"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    //room
+    val roomVersion = "2.4.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    //serialization
+    val serializationVersion = "1.3.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")

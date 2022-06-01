@@ -1,6 +1,5 @@
 package com.ougi.userrepoimpl.data.datastore
 
-import android.util.Base64
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ougi.encryptionapi.data.EncryptedDataStoreApi
 import com.ougi.userrepoapi.data.datastore.UserRepositoryDataStoreApi
@@ -13,9 +12,7 @@ class UserRepositoryDataStoreApiImpl @Inject constructor(
     UserRepositoryDataStoreApi {
 
     override suspend fun saveUserId(userId: String) {
-        val userIdBytes = Base64.decode(userId, Base64.DEFAULT)
-        val userIdString = userIdBytes.decodeToString()
-        encryptedDataStoreApi.write(USER_ID, userIdString, false)
+        encryptedDataStoreApi.write(USER_ID, userId, false)
     }
 
     override suspend fun readUserId(): String? {

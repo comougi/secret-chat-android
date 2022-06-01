@@ -29,7 +29,7 @@ class HashUtilsImpl @Inject constructor() : HashUtils {
     }
 
     override fun getHmac(string: String, key: Key): ByteArray {
-        val bytes = Base64.decode(string, Base64.DEFAULT)
+        val bytes = string.encodeToByteArray()
         return getHmac(bytes, key)
     }
 

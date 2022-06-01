@@ -11,6 +11,6 @@ abstract class CustomWebSocketListener : WebSocketListener() {
     abstract val onMessageStateFlow: StateFlow<String?>
 
     interface Factory {
-        fun create(onFailure: () -> Unit): CustomWebSocketListener
+        fun create(onFailure: () -> Unit, onFailureDelay: Long): CustomWebSocketListener
     }
 }

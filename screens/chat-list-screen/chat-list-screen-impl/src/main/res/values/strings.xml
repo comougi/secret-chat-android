@@ -1,4 +1,9 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_chat">Create chat</string>
+    <string name="chats">Chats</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="no_connection">No connection</string>
+    <string name="you_don_t_have_any_chats_yet">You don\'t have any chats yet</string>
 </resources>

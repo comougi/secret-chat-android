@@ -24,13 +24,14 @@ class UserRepositoryImpl @Inject constructor(
 
         if (userResult is Result.Success) {
             val userIdEncrypted = userResult.data!!
-
             val userIdDecrypted = encryptionClientApi.decryptViaDHAesKey(userIdEncrypted)
-            Log.e("DATA", userIdDecrypted.first)
-            if (userIdDecrypted.second) {
-                userRepositoryDataStoreApi.saveUserId(userIdDecrypted.first)
-                return Result.Success(userIdDecrypted.first)
-            }
+            val userIdDecoded = Base64.decode(userIdDecrypted.first, Base64.DEFAULT)
+            val userId = userIdDecoded.decodeToString()
+            return if (userIdDecrypted.second) {
+                userRepositoryDataStoreApi.saveUserId(userId)
+                Log.d("DATA", "HASH userId $userId")
+                Result.Success(userId)
+            } else Result.Error(userResult.message())
         }
         return userResult
     }

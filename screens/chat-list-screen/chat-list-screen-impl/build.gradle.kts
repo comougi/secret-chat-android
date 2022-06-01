@@ -42,7 +42,11 @@ dependencies {
     //import
     implementation(project(":core:utils"))
     implementation(project(":core:common"))
+    implementation(project(":core:ui"))
+    implementation(project(":features:websocket:websocket-api"))
+    implementation(project(":features:messaging:messaging-api"))
     implementation(project(":screens:chat-list-screen:chat-list-screen-api"))
+    implementation(project(":repositories:chat-repo:chat-repo-api"))
 
     //dagger
     val daggerVersion = "2.41"
@@ -53,6 +57,10 @@ dependencies {
     val navVersion = "2.4.2"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
+    //workmanager
+    val workVersion = "2.7.1"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")

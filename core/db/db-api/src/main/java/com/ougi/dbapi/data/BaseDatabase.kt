@@ -1,3 +1,5 @@
 package com.ougi.dbapi.data
 
-interface BaseDatabase
+import androidx.room.RoomDatabase
+
+abstract class BaseDatabase : RoomDatabase()

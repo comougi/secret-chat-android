@@ -34,9 +34,10 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
         )
     }
 
-    override fun observeState(onStateChanged: (WebSocketState) -> Unit) {
+    override fun observeState(onStateChanged: (WebSocketState?) -> Unit) {
         observeReceivingWork { values ->
-            val state = values[MessagingFeatureWorker.STATE] as WebSocketState
+            val state = (values[MessagingFeatureWorker.STATE] as String?)
+                ?.let { state -> WebSocketState.valueOf(state) }
             onStateChanged(state)
         }
     }
@@ -50,10 +51,7 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
 
     private fun observeWork(onWorkInfosChanged: (List<WorkInfo>?) -> Unit) {
         workManager.getWorkInfosForUniqueWorkLiveData(MessagingFeatureWorker.WORK_NAME)
-            .observeForever { workInfos ->
-                onWorkInfosChanged(workInfos)
-            }
-
+            .observeForever(onWorkInfosChanged)
     }
 
     private fun observeReceivingWork(onProgressChanged: (Map<String, Any>) -> Unit) {

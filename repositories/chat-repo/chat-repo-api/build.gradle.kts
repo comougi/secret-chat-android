@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("kapt")
     kotlin("plugin.serialization") version "1.6.10"
 }
 
@@ -38,10 +39,20 @@ dependencies {
 
     //import
     implementation(project(":core:common"))
+    implementation(project(":core:utils"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
 
     //serialization
     val serializationVersion = "1.3.2"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+
+    //room
+    val roomVersion = "2.4.2"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 
     //default
     implementation("androidx.core:core-ktx:1.7.0")

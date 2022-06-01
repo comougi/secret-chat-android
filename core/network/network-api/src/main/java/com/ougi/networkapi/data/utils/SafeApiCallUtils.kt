@@ -1,5 +1,6 @@
 package com.ougi.networkapi.data.utils
 
+import android.util.Log
 import com.ougi.coreutils.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.Call
@@ -17,12 +18,17 @@ object SafeApiCallUtils {
         return try {
             call.awaitResponse().let { response ->
                 val body = response.body()
-                if (response.isSuccessful && !badResponseCodes.contains(response.code()))
+                if (response.isSuccessful && !badResponseCodes.contains(response.code())) {
+                    Log.d("DATA", "HERE1")
                     Result.Success(body, successMessage)
-                else
+                } else {
+                    Log.d("DATA", "HERE2")
                     Result.Error(body ?: errorMessage)
+                }
             }
         } catch (e: Exception) {
+            Log.d("DATA", "HERE3")
+            Log.d("DATA", e.stackTraceToString())
             Result.Error(errorMessage)
         }
     }

@@ -6,7 +6,7 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-internal interface CoreDbBindsModule {
+internal interface CoreDbModule {
 
     @Binds
     fun bindDbClientApi(dbClientApiImpl: DbClientApiImpl): DbClientApi

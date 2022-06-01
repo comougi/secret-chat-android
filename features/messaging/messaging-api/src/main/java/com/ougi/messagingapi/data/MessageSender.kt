@@ -1,3 +1,8 @@
 package com.ougi.messagingapi.data
 
-interface MessageSender
+import kotlinx.coroutines.flow.StateFlow
+
+interface MessageSender {
+    val messages: StateFlow<String?>
+    fun sendMessage(message: String)
+}
