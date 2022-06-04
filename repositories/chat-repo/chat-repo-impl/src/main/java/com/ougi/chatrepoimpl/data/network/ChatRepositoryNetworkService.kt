@@ -11,6 +11,6 @@ interface ChatRepositoryNetworkService : NetworkService {
     @POST("createChatWithUsers")
     fun createChatWithUsers(
         @Query("userId") userId: String,
-        @Body userIds: List<String>
+        @Body userIds: String
     ): Call<String>
 }

@@ -2,7 +2,7 @@ package com.ougi.coreutils.utils
 
 sealed class Result<T> private constructor(data: T?, val message: Any?) {
 
-    fun message(): String = message.toString()
+    fun message(): String? = message as? String
 
     class Success<T>(val data: T?, message: Any? = null) :
         Result<T>(data, StringParser.parseToString(message))

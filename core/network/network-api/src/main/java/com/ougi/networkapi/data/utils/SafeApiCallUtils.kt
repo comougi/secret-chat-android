@@ -2,7 +2,9 @@ package com.ougi.networkapi.data.utils
 
 import android.util.Log
 import com.ougi.coreutils.utils.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.awaitResponse
 
@@ -10,6 +12,8 @@ import retrofit2.awaitResponse
 object SafeApiCallUtils {
 
     val badResponseCodes = arrayOf(400, 401, 404)
+
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend inline fun <reified T> safeApiCall(
         call: Call<T>,
         errorMessage: Any? = null,
@@ -23,7 +27,12 @@ object SafeApiCallUtils {
                     Result.Success(body, successMessage)
                 } else {
                     Log.d("DATA", "HERE2")
-                    Result.Error(body ?: errorMessage)
+                    val errorBody = withContext(Dispatchers.IO) { response.errorBody()?.string() }
+                    Log.d("DATA", errorBody ?: "errorBody")
+                    Log.d("DATA", response.message())
+                    val message =
+                        if (errorBody.isNullOrBlank() || errorBody.isNullOrEmpty()) errorMessage else errorBody
+                    Result.Error(message)
                 }
             }
         } catch (e: Exception) {

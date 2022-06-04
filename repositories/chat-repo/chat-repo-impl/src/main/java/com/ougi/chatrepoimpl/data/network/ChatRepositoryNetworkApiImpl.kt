@@ -10,7 +10,7 @@ class ChatRepositoryNetworkApiImpl @Inject constructor(private val chatRepositor
 
     override suspend fun createChatWithUsers(
         userId: String,
-        userIds: List<String>
+        userIds: String
     ): Result<String?> {
         val call = chatRepositoryNetworkService.createChatWithUsers(userId, userIds)
         return SafeApiCallUtils.safeApiCall(call)

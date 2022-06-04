@@ -4,6 +4,7 @@ import android.content.Context
 import com.ougi.chatlistscreenimpl.di.ChatListScreenComponentHolder
 import com.ougi.chatlistscreenimpl.di.ChatListScreenDeps
 import com.ougi.chatrepoapi.data.database.ChatRepositoryDao
+import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.chatrepoimpl.di.ChatRepositoryComponentHolder
 import com.ougi.chatrepoimpl.di.ChatRepositoryDeps
 import com.ougi.corecommon.base.ScreenStarter
@@ -241,6 +242,10 @@ object Injector {
                                 get() = ChatRepositoryComponentHolder.getInstance().chatRepositoryDao
                             override val messagingFeatureClientApi: MessagingFeatureClientApi
                                 get() = MessagingFeatureComponentHolder.getInstance().messagingFeatureClientApi
+                            override val userRepository: UserRepository
+                                get() = UserRepositoryComponentHolder.getInstance().userRepository
+                            override val chatRepository: ChatRepository
+                                get() = ChatRepositoryComponentHolder.getInstance().chatRepository
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }

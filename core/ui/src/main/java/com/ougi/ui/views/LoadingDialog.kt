@@ -18,7 +18,7 @@ class LoadingDialog : BaseDialogFragment<LoadingDialogBinding>(LoadingDialogBind
     var title: Any? = null
     var results: StateFlow<Result<*>>? = null
     var action: (() -> Unit)? = null
-    var onSuccess: (() -> Unit)? = null
+    var onSuccess: ((Any?) -> Unit)? = null
     var onError: (() -> Unit)? = null
 
 
@@ -40,7 +40,6 @@ class LoadingDialog : BaseDialogFragment<LoadingDialogBinding>(LoadingDialogBind
         val displayMetrics = resources.displayMetrics
         val dialogWidth = (displayMetrics.widthPixels * 0.97).toInt()
         window?.setLayout(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
-        isCancelable = false
 
         window?.setBackgroundDrawableResource(R.drawable.rounded_container)
     }
@@ -74,7 +73,7 @@ class LoadingDialog : BaseDialogFragment<LoadingDialogBinding>(LoadingDialogBind
                             errorTextView.visibility = View.GONE
                             reloadButton.visibility = View.GONE
                             loadingIndicator.visibility = View.GONE
-                            onSuccess?.invoke()
+                            onSuccess?.invoke(result.data)
                         }
                         is Result.Error -> {
                             loadingIndicator.visibility = View.GONE

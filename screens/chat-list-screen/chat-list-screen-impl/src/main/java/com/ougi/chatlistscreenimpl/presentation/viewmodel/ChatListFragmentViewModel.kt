@@ -2,7 +2,7 @@ package com.ougi.chatlistscreenimpl.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ougi.chatlistscreenimpl.domain.usecase.FetchChatListUseCase
+import com.ougi.chatlistscreenimpl.domain.usecase.GetChatListUseCase
 import com.ougi.chatrepoapi.data.entity.Chat
 import com.ougi.coreutils.utils.Result
 import kotlinx.coroutines.flow.Flow
@@ -14,16 +14,16 @@ interface ChatListFragmentViewModel {
     interface Factory : ViewModelProvider.Factory
 }
 
-class ChatListFragmentViewModelImpl(fetchChatListUseCase: FetchChatListUseCase) :
+class ChatListFragmentViewModelImpl(getChatListUseCase: GetChatListUseCase) :
     ViewModel(), ChatListFragmentViewModel {
     override val chatListResultFlow: Flow<Result<List<Chat>?>> =
-        fetchChatListUseCase.chatListResultFlow
+        getChatListUseCase.chatListResultFlow
 
-    class Factory @Inject constructor(private val fetchChatListUseCase: FetchChatListUseCase) :
+    class Factory @Inject constructor(private val getChatListUseCase: GetChatListUseCase) :
         ChatListFragmentViewModel.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ChatListFragmentViewModelImpl(fetchChatListUseCase) as T
+            return ChatListFragmentViewModelImpl(getChatListUseCase) as T
         }
 
     }

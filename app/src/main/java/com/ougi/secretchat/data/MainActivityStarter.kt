@@ -17,4 +17,5 @@ class MainActivityStarterImpl @Inject constructor(private val context: Context) 
         }
         context.startActivity(intent)
     }
+
 }

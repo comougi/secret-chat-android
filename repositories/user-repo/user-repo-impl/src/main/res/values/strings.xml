@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="you_are_not_registered">You are not registered</string>
+    <string name="bad_hash_check">Bad hash check</string>
+    <string name="user_with_id">User with id</string>
+    <string name="not_registered">not registered</string>
+</resources>

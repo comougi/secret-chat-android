@@ -1,6 +1,5 @@
 package com.ougi.serverinforepoimpl.data.repository
 
-import android.util.Base64
 import android.util.Log
 import com.ougi.coreutils.utils.Result
 import com.ougi.encryptionapi.data.EncryptionClientApi
@@ -25,13 +24,11 @@ class ServerInfoRepositoryImpl @Inject constructor(
             val encryptedWebSocketLink = webSocketLinkResult.data!!
             val decryptedWebSocketLink =
                 encryptionClientApi.decryptViaDHAesKey(encryptedWebSocketLink)
-            val decryptedWebSocketLinkBytes =
-                Base64.decode(decryptedWebSocketLink.first, Base64.DEFAULT)
-            val decryptedWebSocketLinkDecoded = decryptedWebSocketLinkBytes.decodeToString()
 
             if (decryptedWebSocketLink.second) {
-                Log.d("DATA", "M WS LINK  $decryptedWebSocketLinkDecoded")
-                return Result.Success(decryptedWebSocketLinkDecoded)
+                val link = decryptedWebSocketLink.first
+                Log.d("DATA", "M WS LINK  $link")
+                return Result.Success(link)
             }
         }
         return webSocketLinkResult

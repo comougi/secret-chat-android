@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":features:messaging:messaging-api"))
     implementation(project(":screens:chat-list-screen:chat-list-screen-api"))
     implementation(project(":repositories:chat-repo:chat-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
 
     //dagger
     val daggerVersion = "2.41"

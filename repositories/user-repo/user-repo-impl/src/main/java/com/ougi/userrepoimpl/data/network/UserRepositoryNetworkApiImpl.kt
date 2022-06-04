@@ -15,4 +15,14 @@ class UserRepositoryNetworkApiImpl @Inject constructor(
         return SafeApiCallUtils.safeApiCall(call, R.string.check_network_connection)
     }
 
+    override suspend fun isUserRegistered(
+        userId: String,
+        isRegisteredId: String,
+        encryptedUserId: String
+    ): Result<String?> {
+        val call =
+            userRepositoryNetworkService.isUserRegistered(userId, isRegisteredId, encryptedUserId)
+        return SafeApiCallUtils.safeApiCall(call)
+    }
+
 }

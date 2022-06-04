@@ -1,20 +1,19 @@
 package com.ougi.chatlistscreenimpl.domain.usecase
 
-import com.ougi.chatlistscreenimpl.domain.repository.ChatListRepository
 import com.ougi.chatrepoapi.data.entity.Chat
+import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.coreutils.utils.Result
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface FetchChatListUseCase {
+interface GetChatListUseCase {
     val chatListResultFlow: Flow<Result<List<Chat>?>>
 }
 
-class FetchChatListUseCaseImpl @Inject constructor(chatListRepository: ChatListRepository) :
-    FetchChatListUseCase {
+class GetChatListUseCaseImpl @Inject constructor(chatListRepository: ChatRepository) :
+    GetChatListUseCase {
 
     override val chatListResultFlow: Flow<Result<List<Chat>?>> =
-        chatListRepository.chatsResultFlow
-
+        chatListRepository.getChats()
 
 }

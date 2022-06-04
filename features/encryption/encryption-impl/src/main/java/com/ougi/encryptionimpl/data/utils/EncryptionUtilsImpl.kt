@@ -27,18 +27,18 @@ class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) 
 
     override fun encryptViaSecretKey(data: String, key: SecretKey): Pair<String, ByteArray> {
         aesCipher.init(Cipher.ENCRYPT_MODE, key)
-        return aesCipherDoFinal(data)
+        return encryptAesCipherDoFinal(data)
     }
 
     override fun decryptViaSecretKey(data: String, key: SecretKey, iv: ByteArray): String {
         val ivParameterSpec = IvParameterSpec(iv)
         aesCipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec)
-        return aesCipherDoFinal(data).first
-            .replace(" ", "").replace("\n", "")
+        return decryptAesCipherDoFinal(data).first
     }
 
     override fun encryptViaSecretKeySeparated(data: String, key: SecretKey): String {
         val encryptedData = encryptViaSecretKey(data, key)
+
         val hash = hashUtils.getHmac(data, key)
         return EncryptionSeparationUtils.separate(encryptedData.first, encryptedData.second, hash)
     }
@@ -53,20 +53,31 @@ class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) 
     }
 
     private fun rsaCipherDoFinal(data: String): String {
-        val cipherBytes = doFinal(data, rsaCipher)
-        return Base64.encodeToString(cipherBytes, Base64.DEFAULT)
+        val cipherBytes = encryptDoFinal(data, rsaCipher)
+        return Base64.encodeToString(cipherBytes, Base64.NO_WRAP)
     }
 
-    private fun aesCipherDoFinal(data: String): Pair<String, ByteArray> {
-        val cipherBytes = doFinal(data, aesCipher)
-        return Base64.encodeToString(cipherBytes, Base64.DEFAULT) to aesCipher.iv
+    private fun encryptAesCipherDoFinal(data: String): Pair<String, ByteArray> {
+        val cipherBytes = encryptDoFinal(data, aesCipher)
+        return Base64.encodeToString(cipherBytes, Base64.NO_WRAP) to aesCipher.iv
     }
 
-    private fun doFinal(data: String, cipher: Cipher): ByteArray {
-        val bytes = Base64.decode(data, Base64.DEFAULT)
+    private fun decryptAesCipherDoFinal(data: String): Pair<String, ByteArray> {
+        val cipherBytes = decryptDoFinal(data, aesCipher)
+        val cipherBase64Bytes = Base64.decode(cipherBytes, Base64.NO_WRAP)
+        return cipherBase64Bytes.decodeToString() to aesCipher.iv
+    }
+
+    private fun encryptDoFinal(data: String, cipher: Cipher): ByteArray {
+        val dataBytes = data.encodeToByteArray()
+        val dataBase64Bytes = Base64.encode(dataBytes, Base64.NO_WRAP)
+        return cipher.doFinal(dataBase64Bytes)
+    }
+
+    private fun decryptDoFinal(data: String, cipher: Cipher): ByteArray {
+        val bytes = Base64.decode(data, Base64.NO_WRAP)
         return cipher.doFinal(bytes)
     }
-
 
     companion object {
         private const val RSA = "RSA/ECB/PKCS1Padding"

@@ -62,7 +62,7 @@ class MessagingFeatureWorker @AssistedInject constructor(
 
                 }
                 else -> {
-                    Log.d("DATA", webSocketInfo.message())
+                    Log.d("DATA", webSocketInfo.message() ?: "web socket error")
                     Result.retry()
                 }
 

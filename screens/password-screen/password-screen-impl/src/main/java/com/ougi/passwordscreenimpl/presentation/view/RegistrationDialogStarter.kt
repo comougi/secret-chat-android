@@ -26,6 +26,7 @@ class RegistrationDialogStarter @Inject constructor(
     suspend fun start(fragment: Fragment, isOnStart: Boolean) {
         if (!viewModel.isRegistered()) {
             val dialog = LoadingDialog()
+            dialog.isCancelable = false
             dialog.title = context.getString(R.string.connecting_to_server)
             dialog.action = { viewModel.registerUser() }
             dialog.results = viewModel.idResultStateFlow
@@ -38,7 +39,7 @@ class RegistrationDialogStarter @Inject constructor(
     private fun onSuccess(
         isOnStart: Boolean,
         fragment: Fragment,
-        dialog: LoadingDialog?
+        dialog: LoadingDialog?,
     ) {
         dialog?.dismiss()
 
