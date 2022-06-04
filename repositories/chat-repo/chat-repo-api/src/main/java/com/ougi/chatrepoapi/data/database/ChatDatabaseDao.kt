@@ -3,7 +3,7 @@ package com.ougi.chatrepoapi.data.database
 import com.ougi.chatrepoapi.data.entity.Chat
 import kotlinx.coroutines.flow.Flow
 
-interface ChatRepositoryDao {
+interface ChatDatabaseDao {
     suspend fun getAllChats(): List<Chat>
     fun getAllChatsFlow(): Flow<List<Chat>>
     suspend fun getChatById(chatId: String): Chat

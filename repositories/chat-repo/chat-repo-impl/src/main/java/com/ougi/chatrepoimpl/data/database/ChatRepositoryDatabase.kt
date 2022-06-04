@@ -9,7 +9,7 @@ import com.ougi.dbapi.data.DbClientApi
 @Database(entities = [Chat::class], exportSchema = false, version = 1)
 @TypeConverters(ChatRepositoryDatabaseTypeConverter::class)
 abstract class ChatRepositoryDatabase : BaseDatabase() {
-    abstract val chatRepositoryDatabaseDao: ChatRepositoryDatabaseDao
+    abstract val chatDatabaseDao: ChatDatabaseDaoImpl
 
     companion object {
         private var INSTANCE: ChatRepositoryDatabase? = null

@@ -1,6 +1,6 @@
 package com.ougi.chatrepoimpl.di
 
-import com.ougi.chatrepoapi.data.database.ChatRepositoryDao
+import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.network.ChatRepositoryNetworkApi
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.chatrepoimpl.data.database.ChatRepositoryDatabase
@@ -35,8 +35,8 @@ interface ChatRepositoryModule {
         }
 
         @[Repo Provides]
-        fun provideChatRepositoryDatabaseDao(chatRepositoryDatabase: ChatRepositoryDatabase): ChatRepositoryDao {
-            return chatRepositoryDatabase.chatRepositoryDatabaseDao
+        fun provideChatRepositoryDatabaseDao(chatDatabase: ChatRepositoryDatabase): ChatDatabaseDao {
+            return chatDatabase.chatDatabaseDao
         }
 
     }

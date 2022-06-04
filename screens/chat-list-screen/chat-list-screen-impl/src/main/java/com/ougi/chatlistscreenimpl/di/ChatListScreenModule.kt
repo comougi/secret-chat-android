@@ -1,7 +1,5 @@
 package com.ougi.chatlistscreenimpl.di
 
-import com.ougi.chatlistscreenimpl.data.MessagingConnectionStateRepositoryImpl
-import com.ougi.chatlistscreenimpl.domain.repository.MessagingConnectionStateRepository
 import com.ougi.chatlistscreenimpl.domain.usecase.*
 import com.ougi.chatlistscreenimpl.presentation.viewmodel.*
 import com.ougi.coreutils.dagger.Feature
@@ -17,9 +15,6 @@ interface ChatListScreenModule {
     @[Feature Binds]
     fun bindChatListViewModelFactory(factory: ChatListFragmentViewModelImpl.Factory): ChatListFragmentViewModel.Factory
 
-
-    @[Feature Binds]
-    fun bindMessagingConnectionStateRepository(messagingConnectionStateRepositoryImpl: MessagingConnectionStateRepositoryImpl): MessagingConnectionStateRepository
 
     @[Feature Binds]
     fun bindObserveConnectionUseCase(observeConnectionUseCaseImpl: ObserveConnectionUseCaseImpl): ObserveConnectionUseCase

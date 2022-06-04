@@ -1,6 +1,6 @@
 package com.ougi.chatrepoimpl.data.repository
 
-import com.ougi.chatrepoapi.data.database.ChatRepositoryDao
+import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.entity.Chat
 import com.ougi.chatrepoapi.data.network.ChatRepositoryNetworkApi
 import com.ougi.chatrepoapi.data.repository.ChatRepository
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
     private val chatRepositoryNetworkApi: ChatRepositoryNetworkApi,
-    private val chatRepositoryDao: ChatRepositoryDao,
+    private val chatDatabaseDao: ChatDatabaseDao,
     private val userRepositoryDataStoreApi: UserRepositoryDataStoreApi,
     private val encryptionClientApi: EncryptionClientApi
 ) : ChatRepository {
@@ -33,7 +33,7 @@ class ChatRepositoryImpl @Inject constructor(
             val chatJsonDecrypted = encryptionClientApi.decryptViaDHAesKey(chatJsonEncrypted)
             return if (chatJsonDecrypted.second) {
                 val chat = Json.decodeFromString<Chat>(chatJsonDecrypted.first)
-                chatRepositoryDao.insertChat(chat)
+                chatDatabaseDao.insertChat(chat)
                 Result.Success(chat)
             } else
                 Result.Error()
@@ -43,7 +43,7 @@ class ChatRepositoryImpl @Inject constructor(
         return Result.Error(message)
     }
 
-    override fun getChats(): Flow<Result<List<Chat>?>> = chatRepositoryDao.getAllChatsFlow()
+    override fun getChats(): Flow<Result<List<Chat>?>> = chatDatabaseDao.getAllChatsFlow()
         .map { list -> Result.Success(list) as Result<List<Chat>?> }
         .catch { emit(Result.Error()) }
         .onEmpty { emit(Result.Loading()) }

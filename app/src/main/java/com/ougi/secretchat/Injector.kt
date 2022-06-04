@@ -3,7 +3,7 @@ package com.ougi.secretchat
 import android.content.Context
 import com.ougi.chatlistscreenimpl.di.ChatListScreenComponentHolder
 import com.ougi.chatlistscreenimpl.di.ChatListScreenDeps
-import com.ougi.chatrepoapi.data.database.ChatRepositoryDao
+import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.chatrepoimpl.di.ChatRepositoryComponentHolder
 import com.ougi.chatrepoimpl.di.ChatRepositoryDeps
@@ -238,8 +238,8 @@ object Injector {
                 override val depsFactory: (DepsHolder<ChatListScreenDeps>) -> ChatListScreenDeps =
                     { depsHolder ->
                         object : ChatListScreenDeps {
-                            override val chatRepositoryDao: ChatRepositoryDao
-                                get() = ChatRepositoryComponentHolder.getInstance().chatRepositoryDao
+                            override val chatDatabaseDao: ChatDatabaseDao
+                                get() = ChatRepositoryComponentHolder.getInstance().chatDatabaseDao
                             override val messagingFeatureClientApi: MessagingFeatureClientApi
                                 get() = MessagingFeatureComponentHolder.getInstance().messagingFeatureClientApi
                             override val userRepository: UserRepository

@@ -34,11 +34,6 @@ class ChatListToolbarFragment :
         setToolbarSubtitleParams()
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.startObservingState()
-    }
-
     private fun setToolbarSubtitleParams() {
         with(binding.chatListToolbar) {
             viewModel.connectionStateResult

@@ -1,11 +1,13 @@
 package com.ougi.messagingimpl.data
 
 import android.content.Context
+import androidx.lifecycle.asFlow
 import androidx.work.*
 import com.ougi.messagingapi.data.MessagingFeatureClientApi
 import com.ougi.messagingimpl.data.workmanager.MessagingFeatureWorker
 import com.ougi.websocketapi.data.entities.WebSocketState
-import okhttp3.WebSocket
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -34,38 +36,27 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
         )
     }
 
-    override fun observeState(onStateChanged: (WebSocketState?) -> Unit) {
-        observeReceivingWork { values ->
-            val state = (values[MessagingFeatureWorker.STATE] as String?)
-                ?.let { state -> WebSocketState.valueOf(state) }
-            onStateChanged(state)
-        }
-    }
-
-    override fun sendMessage(message: String) {
-        observeReceivingWork { values ->
-            val webSocket = values[MessagingFeatureWorker.WEB_SOCKET] as WebSocket
-            webSocket.send(message)
-        }
-    }
-
-    private fun observeWork(onWorkInfosChanged: (List<WorkInfo>?) -> Unit) {
-        workManager.getWorkInfosForUniqueWorkLiveData(MessagingFeatureWorker.WORK_NAME)
-            .observeForever(onWorkInfosChanged)
-    }
-
-    private fun observeReceivingWork(onProgressChanged: (Map<String, Any>) -> Unit) {
-        observeWork { workInfos ->
-            if (!workInfos.isNullOrEmpty()
-                && workInfos.any { info -> info.state == WorkInfo.State.RUNNING }
-            ) {
-                val workInfo = workInfos
-                    .first { workInfo -> workInfo.state == WorkInfo.State.RUNNING }
-                val progressValues = workInfo.progress.keyValueMap
-                onProgressChanged(progressValues)
+    override fun webSocketStateAsFlow(): Flow<WebSocketState?> =
+        runningWorkFlow()
+            .map { workInfo ->
+                workInfo?.let { info ->
+                    val values = info.progress.keyValueMap
+                    (values[MessagingFeatureWorker.STATE] as String?)
+                        ?.let { state -> WebSocketState.valueOf(state) }
+                }
             }
-        }
-    }
+
+    private fun workInfosFlow(): Flow<List<WorkInfo>?> =
+        workManager.getWorkInfosForUniqueWorkLiveData(MessagingFeatureWorker.WORK_NAME).asFlow()
+
+    private fun runningWorkFlow(): Flow<WorkInfo?> =
+        workInfosFlow()
+            .map { workInfos ->
+                if (workInfos?.any { info -> info.state == WorkInfo.State.RUNNING } == true)
+                    workInfos.first { workInfo -> workInfo.state == WorkInfo.State.RUNNING }
+                else
+                    null
+            }
 
     companion object {
         const val IS_IN_FOREGROUND = "isInForeground"

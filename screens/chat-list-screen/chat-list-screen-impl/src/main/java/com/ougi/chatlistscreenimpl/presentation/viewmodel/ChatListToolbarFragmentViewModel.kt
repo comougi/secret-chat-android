@@ -5,24 +5,20 @@ import androidx.lifecycle.ViewModelProvider
 import com.ougi.chatlistscreenimpl.domain.usecase.ObserveConnectionUseCase
 import com.ougi.coreutils.utils.Result
 import com.ougi.websocketapi.data.entities.WebSocketState
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface ChatListToolbarFragmentViewModel {
-    val connectionStateResult: StateFlow<Result<WebSocketState?>>
-    fun startObservingState()
+    val connectionStateResult: Flow<Result<WebSocketState?>>
+
     interface Factory : ViewModelProvider.Factory
 }
 
-class ChatListToolbarFragmentViewModelImpl(private val observeConnectionUseCase: ObserveConnectionUseCase) :
+class ChatListToolbarFragmentViewModelImpl(observeConnectionUseCase: ObserveConnectionUseCase) :
     ViewModel(), ChatListToolbarFragmentViewModel {
 
-    override val connectionStateResult: StateFlow<Result<WebSocketState?>> =
+    override val connectionStateResult: Flow<Result<WebSocketState?>> =
         observeConnectionUseCase.connectionStateResult
-
-    override fun startObservingState() {
-        observeConnectionUseCase.startObservingState()
-    }
 
     class Factory @Inject constructor(private val observeConnectionUseCase: ObserveConnectionUseCase) :
         ChatListToolbarFragmentViewModel.Factory {

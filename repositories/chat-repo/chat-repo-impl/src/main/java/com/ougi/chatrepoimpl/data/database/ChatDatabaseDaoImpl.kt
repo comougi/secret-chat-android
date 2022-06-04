@@ -1,12 +1,12 @@
 package com.ougi.chatrepoimpl.data.database
 
 import androidx.room.*
-import com.ougi.chatrepoapi.data.database.ChatRepositoryDao
+import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.entity.Chat
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ChatRepositoryDatabaseDao : ChatRepositoryDao {
+interface ChatDatabaseDaoImpl : ChatDatabaseDao {
 
     @Query("SELECT * FROM chat")
     override suspend fun getAllChats(): List<Chat>
