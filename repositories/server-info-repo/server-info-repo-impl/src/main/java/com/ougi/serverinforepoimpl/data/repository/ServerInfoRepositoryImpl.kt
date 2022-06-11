@@ -31,7 +31,7 @@ class ServerInfoRepositoryImpl @Inject constructor(
                 return Result.Success(link)
             }
         }
-        return webSocketLinkResult
+        return Result.Error(webSocketLinkResult.message())
     }
 
     override suspend fun getPushWebSocketConnectionLink(): Result<String?> {

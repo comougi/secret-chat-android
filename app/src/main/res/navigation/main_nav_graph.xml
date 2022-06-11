@@ -17,5 +17,6 @@
 
     <include app:graph="@navigation/password_screen_nav_graph" />
     <include app:graph="@navigation/chat_list_nav_graph" />
+    <include app:graph="@navigation/chat_screen_nav_graph" />
 
 </navigation>

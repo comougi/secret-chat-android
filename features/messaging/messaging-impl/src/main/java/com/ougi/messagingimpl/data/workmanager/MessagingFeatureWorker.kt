@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.ougi.messagerepoapi.data.entities.Message
+import com.ougi.messagerepoapi.data.repository.MessageRepository
 import com.ougi.messagingapi.data.MessageReceiver
 import com.ougi.messagingapi.data.MessageSender
 import com.ougi.messagingapi.data.MessagingFeatureClientApi
@@ -25,6 +27,7 @@ class MessagingFeatureWorker @AssistedInject constructor(
     private val messagingFeatureClientApi: MessagingFeatureClientApi,
     private val messageReceiver: MessageReceiver,
     private val messageSender: MessageSender,
+    private val messageRepository: MessageRepository,
     @Assisted(CONTEXT) appContext: Context,
     @Assisted(PARAMS) params: WorkerParameters
 ) : CoroutineWorker(appContext, params) {
@@ -52,7 +55,19 @@ class MessagingFeatureWorker @AssistedInject constructor(
 
                     CoroutineScope(Job()).launch {
                         messageSender.messages.collect { message ->
-                            message?.let { webSocketListener.currentWebSocket?.send(it) }
+                            message?.let {
+                                val encryptedMessage = it.second
+                                val messageId = it.first
+                                val send =
+                                    webSocketListener.currentWebSocket?.send(encryptedMessage)
+                                val messageStatus = when (send) {
+                                    null -> Message.Status.FAIL
+                                    true -> Message.Status.SENT
+                                    false -> Message.Status.FAIL
+                                }
+                                Log.d("DATA", messageStatus.toString())
+                                messageRepository.updateMessageStatus(messageId, messageStatus)
+                            }
                         }
                     }
 

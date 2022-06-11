@@ -20,9 +20,19 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
 
     override suspend fun register(): Result<String?> {
-        val publicKey = keyStorageApi.readDhKeyPair().public
-        val publicKeyStr = Base64.encodeToString(publicKey.encoded, Base64.NO_WRAP)
-        val userResult = userRepositoryNetworkApi.register(publicKeyStr)
+        val dhPublicKey = keyStorageApi.readDhKeyPair().public
+        val dhPublicKeyStr = Base64.encodeToString(dhPublicKey.encoded, Base64.NO_WRAP)
+
+        val rsaPublicKey = keyStorageApi.readRsaKeyPair().public
+        val rsaPublicKeyStr = Base64.encodeToString(rsaPublicKey.encoded, Base64.NO_WRAP)
+        val rsaPublicKeyEncrypted = encryptionClientApi.encryptViaDHAesKey(rsaPublicKeyStr)
+
+        val publicKeys = mapOf(
+            "dhPublicKey" to dhPublicKeyStr,
+            "rsaPublicKey" to rsaPublicKeyEncrypted
+        )
+
+        val userResult = userRepositoryNetworkApi.register(publicKeys)
 
         if (userResult is Result.Success) {
             val userIdEncrypted = userResult.data!!
@@ -33,12 +43,11 @@ class UserRepositoryImpl @Inject constructor(
                 Result.Success(userId)
             } else Result.Error(R.string.bad_hash_check)
         }
-        return userResult
+        return Result.Error(userResult.message())
     }
 
     override suspend fun isUserRegistered(isRegisteredId: String): Result<Boolean?> {
-        val userId = userRepositoryDataStoreApi.readUserId()
-            ?: return Result.Error(R.string.you_are_not_registered)
+        val userId = getUserId()
         val userIdEncrypted = encryptionClientApi.encryptViaDHAesKey(userId)
         Log.d("DATA", "'$userIdEncrypted'")
         val result =
@@ -60,6 +69,11 @@ class UserRepositoryImpl @Inject constructor(
             if (result.message() != null) hasNoUserMessage
             else com.ougi.ui.R.string.check_network_connection
         return Result.Error(errorMessage)
+    }
+
+    override suspend fun getUserId(): String {
+        return userRepositoryDataStoreApi.readUserId()
+            ?: throw NullPointerException("User not registered")
     }
 
 }

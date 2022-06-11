@@ -3,11 +3,13 @@ package com.ougi.secretchat
 import android.content.Context
 import com.ougi.chatlistscreenimpl.di.ChatListScreenComponentHolder
 import com.ougi.chatlistscreenimpl.di.ChatListScreenDeps
-import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.chatrepoimpl.di.ChatRepositoryComponentHolder
 import com.ougi.chatrepoimpl.di.ChatRepositoryDeps
-import com.ougi.corecommon.base.ScreenStarter
+import com.ougi.chatscreenapi.data.ChatScreenStarter
+import com.ougi.chatscreenimpl.di.ChatScreenComponentHolder
+import com.ougi.chatscreenimpl.di.ChatScreenDeps
+import com.ougi.corecommon.base.ActivityStarter
 import com.ougi.corecommon.base.di.BaseFeatureDeps
 import com.ougi.corecommon.base.di.DepsHolder
 import com.ougi.coreutils.di.CoreUtilsComponentHolder
@@ -18,9 +20,15 @@ import com.ougi.dbimpl.di.CoreDbDeps
 import com.ougi.encryptionapi.data.EncryptedDataStoreApi
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.encryptionapi.data.KeyStorageApi
+import com.ougi.encryptionapi.data.utils.EncryptionUtils
 import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
 import com.ougi.encryptionimpl.di.EncryptionFeatureComponentHolder
 import com.ougi.encryptionimpl.di.EncryptionFeatureDeps
+import com.ougi.messagerepoapi.data.database.PersonalMessageDatabaseDao
+import com.ougi.messagerepoapi.data.repository.MessageRepository
+import com.ougi.messagerepoimpl.di.MessageRepositoryComponentHolder
+import com.ougi.messagerepoimpl.di.MessageRepositoryDeps
+import com.ougi.messagingapi.data.MessageSender
 import com.ougi.messagingapi.data.MessagingFeatureClientApi
 import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
 import com.ougi.messagingimpl.di.MessagingFeatureComponentHolder
@@ -28,7 +36,6 @@ import com.ougi.messagingimpl.di.MessagingFeatureDeps
 import com.ougi.networkapi.data.NetworkClientApi
 import com.ougi.networkimpl.di.CoreNetworkComponentHolder
 import com.ougi.networkimpl.di.CoreNetworkDeps
-import com.ougi.passwordscreenapi.data.PasswordScreenStarter
 import com.ougi.passwordscreenimpl.di.PasswordScreenComponentHolder
 import com.ougi.passwordscreenimpl.di.PasswordScreenDeps
 import com.ougi.secretchat.di.AppComponentHolder
@@ -65,11 +72,13 @@ object Injector {
         //screens
         injectPasswordScreenComponent()
         injectChatListScreenComponent()
+        injectChatScreenComponent()
 
         //repositories
         injectChatRepositoryComponent()
         injectServerInfoRepositoryComponent()
         injectUserRepositoryComponent()
+        injectMessageRepositoryComponent()
     }
 
     private fun injectAppComponent(context: Context) {
@@ -175,8 +184,6 @@ object Injector {
                         object : EncryptionFeatureDeps {
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
-                            override val passwordScreenStarter: PasswordScreenStarter
-                                get() = PasswordScreenComponentHolder.getInstance().passwordScreenStarter
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -196,6 +203,12 @@ object Injector {
                                 get() = ServerInfoRepositoryComponentHolder.getInstance().serverInfoRepository
                             override val webSocketClientApi: WebSocketClientApi
                                 get() = WebSocketFeatureComponentHolder.getInstance().webSocketClientApi
+                            override val encryptionClientApi: EncryptionClientApi
+                                get() = EncryptionFeatureComponentHolder.getInstance().encryptionClientApi
+                            override val messageRepository: MessageRepository
+                                get() = MessageRepositoryComponentHolder.getInstance().messageRepository
+                            override val chatRepository: ChatRepository
+                                get() = ChatRepositoryComponentHolder.getInstance().chatRepository
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -221,7 +234,7 @@ object Injector {
                                 get() = UserRepositoryComponentHolder.getInstance().userRepository
                             override val userRepositoryDataStoreApi: UserRepositoryDataStoreApi
                                 get() = UserRepositoryComponentHolder.getInstance().userRepositoryDataStoreApi
-                            override val mainActivityStarter: ScreenStarter
+                            override val mainActivityStarter: ActivityStarter
                                 get() = AppComponentHolder.getInstance().mainActivityStarter
                             override val context: Context
                                 get() = CoreUtilsComponentHolder.getInstance().contextProvider.context
@@ -238,14 +251,39 @@ object Injector {
                 override val depsFactory: (DepsHolder<ChatListScreenDeps>) -> ChatListScreenDeps =
                     { depsHolder ->
                         object : ChatListScreenDeps {
-                            override val chatDatabaseDao: ChatDatabaseDao
-                                get() = ChatRepositoryComponentHolder.getInstance().chatDatabaseDao
                             override val messagingFeatureClientApi: MessagingFeatureClientApi
                                 get() = MessagingFeatureComponentHolder.getInstance().messagingFeatureClientApi
                             override val userRepository: UserRepository
                                 get() = UserRepositoryComponentHolder.getInstance().userRepository
                             override val chatRepository: ChatRepository
                                 get() = ChatRepositoryComponentHolder.getInstance().chatRepository
+                            override val chatScreenStarterFactory: ChatScreenStarter.Factory
+                                get() = ChatScreenComponentHolder.getInstance().chatScreenStarterFactory
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectChatScreenComponent() {
+        ChatScreenComponentHolder.depsProvider = {
+            object : DepsHolder<ChatScreenDeps> {
+                override val depsFactory: (DepsHolder<ChatScreenDeps>) -> ChatScreenDeps =
+                    { depsHolder ->
+                        object : ChatScreenDeps {
+                            override val messageSender: MessageSender
+                                get() = MessagingFeatureComponentHolder.getInstance().messageSender
+                            override val userRepository: UserRepository
+                                get() = UserRepositoryComponentHolder.getInstance().userRepository
+                            override val chatRepository: ChatRepository
+                                get() = ChatRepositoryComponentHolder.getInstance().chatRepository
+                            override val messageDatabaseDao: PersonalMessageDatabaseDao
+                                get() = MessageRepositoryComponentHolder.getInstance().personalMessageDatabaseDao
+                            override val keyStorageApi: KeyStorageApi
+                                get() = EncryptionFeatureComponentHolder.getInstance().keyStorageApi
+                            override val messageRepository: MessageRepository
+                                get() = MessageRepositoryComponentHolder.getInstance().messageRepository
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -313,6 +351,27 @@ object Injector {
                                 get() = EncryptionFeatureComponentHolder.getInstance().encryptedDataStoreApi
                             override val keyStorageApi: KeyStorageApi
                                 get() = EncryptionFeatureComponentHolder.getInstance().keyStorageApi
+                            override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
+                        }
+                    }
+            }.deps
+        }
+    }
+
+    private fun injectMessageRepositoryComponent() {
+        MessageRepositoryComponentHolder.depsProvider = {
+            object : DepsHolder<MessageRepositoryDeps> {
+                override val depsFactory: (DepsHolder<MessageRepositoryDeps>) -> MessageRepositoryDeps =
+                    { depsHolder ->
+                        object : MessageRepositoryDeps {
+                            override val dbClientApi: DbClientApi
+                                get() = CoreDbComponentHolder.getInstance().dbClientApi
+                            override val keyGenerationUtils: KeyGenerationUtils
+                                get() = EncryptionFeatureComponentHolder.getInstance().keyGenerationUtils
+                            override val encryptionUtils: EncryptionUtils
+                                get() = EncryptionFeatureComponentHolder.getInstance().encryptionUtils
+                            override val encryptionClientApi: EncryptionClientApi
+                                get() = EncryptionFeatureComponentHolder.getInstance().encryptionClientApi
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }

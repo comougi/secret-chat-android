@@ -1,13 +1,12 @@
 package com.ougi.messagingimpl.di
 
 import com.ougi.coreutils.dagger.Feature
-import com.ougi.messagingapi.data.MessageReceiver
-import com.ougi.messagingapi.data.MessageSender
-import com.ougi.messagingapi.data.MessagingFeatureClientApi
-import com.ougi.messagingapi.data.MessagingFeatureWorkerFactory
+import com.ougi.encryptionapi.data.EncryptionClientApi
+import com.ougi.messagingapi.data.*
 import com.ougi.messagingimpl.data.MessageReceiverImpl
 import com.ougi.messagingimpl.data.MessageSenderImpl
 import com.ougi.messagingimpl.data.MessagingFeatureClientApiImpl
+import com.ougi.messagingimpl.data.SystemMessageHandlerImpl
 import com.ougi.messagingimpl.data.workmanager.MessagingFeatureWorkerFactoryImpl
 import dagger.Binds
 import dagger.Module
@@ -25,10 +24,13 @@ interface MessagingFeatureModule {
     @[Feature Binds]
     fun bindMessagingFeatureWorkerFactory(factory: MessagingFeatureWorkerFactoryImpl): MessagingFeatureWorkerFactory
 
+    @[Feature Binds]
+    fun bindSystemMessageHandler(systemMessageDefinerImpl: SystemMessageHandlerImpl): SystemMessageHandler
+
     companion object {
         @[Feature Provides]
-        fun provideMessageSender(): MessageSender {
-            return MessageSenderImpl.getInstance()
+        fun provideMessageSender(encryptionClientApi: EncryptionClientApi): MessageSender {
+            return MessageSenderImpl.getInstance(encryptionClientApi)
         }
     }
 }

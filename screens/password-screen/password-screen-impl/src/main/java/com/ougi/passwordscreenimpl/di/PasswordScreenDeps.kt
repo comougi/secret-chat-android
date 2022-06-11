@@ -1,7 +1,7 @@
 package com.ougi.passwordscreenimpl.di
 
 import android.content.Context
-import com.ougi.corecommon.base.ScreenStarter
+import com.ougi.corecommon.base.ActivityStarter
 import com.ougi.corecommon.base.di.BaseFeatureDeps
 import com.ougi.encryptionapi.data.KeyStorageApi
 import com.ougi.encryptionapi.data.utils.KeyGenerationUtils
@@ -13,6 +13,6 @@ interface PasswordScreenDeps : BaseFeatureDeps {
     val keyGenerationUtils: KeyGenerationUtils
     val userRepository: UserRepository
     val userRepositoryDataStoreApi: UserRepositoryDataStoreApi
-    val mainActivityStarter: ScreenStarter
+    val mainActivityStarter: ActivityStarter
     val context: Context
 }

@@ -1,6 +1,7 @@
 package com.ougi.encryptionimpl.data.utils
 
 import android.util.Base64
+import com.ougi.encryptionapi.data.entity.AesEncryptedData
 import com.ougi.encryptionapi.data.utils.EncryptionUtils
 import com.ougi.encryptionapi.data.utils.HashUtils
 import java.security.PrivateKey
@@ -17,44 +18,55 @@ class EncryptionUtilsImpl @Inject constructor(private val hashUtils: HashUtils) 
 
     override fun encryptViaPublicKey(data: String, publicKey: PublicKey): String {
         rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey)
-        return rsaCipherDoFinal(data)
+        return encryptRsaCipherDoFinal(data)
     }
 
     override fun decryptViaPrivateKey(data: String, privateKey: PrivateKey): String {
         rsaCipher.init(Cipher.DECRYPT_MODE, privateKey)
-        return rsaCipherDoFinal(data)
+        return decryptRsaCipherDoFinal(data)
     }
 
-    override fun encryptViaSecretKey(data: String, key: SecretKey): Pair<String, ByteArray> {
+    override fun encryptViaSecretKey(data: String, key: SecretKey): AesEncryptedData {
         aesCipher.init(Cipher.ENCRYPT_MODE, key)
-        return encryptAesCipherDoFinal(data)
+
+        val encryptedData = encryptAesCipherDoFinal(data)
+
+        val hash = hashUtils.getHmac(data, key)
+
+        return AesEncryptedData.Builder()
+            .encryptedData(encryptedData.first)
+            .hash(hash)
+            .iv(encryptedData.second)
+            .build()
     }
 
-    override fun decryptViaSecretKey(data: String, key: SecretKey, iv: ByteArray): String {
+    override fun decryptViaSecretKey(
+        data: AesEncryptedData,
+        key: SecretKey
+    ): Pair<String, Boolean> {
+        val encryptedData = data.encryptedData
+        val ivBytes = data.ivBytes()
+        val decryptedData = decryptViaSecretKey(encryptedData, key, ivBytes)
+        val isHashEquals =
+            data.hashBytes().contentEquals(hashUtils.getHmac(decryptedData, key))
+        return decryptedData to isHashEquals
+    }
+
+    private fun decryptViaSecretKey(data: String, key: SecretKey, iv: ByteArray): String {
         val ivParameterSpec = IvParameterSpec(iv)
         aesCipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec)
         return decryptAesCipherDoFinal(data).first
     }
 
-    override fun encryptViaSecretKeySeparated(data: String, key: SecretKey): String {
-        val encryptedData = encryptViaSecretKey(data, key)
-
-        val hash = hashUtils.getHmac(data, key)
-        return EncryptionSeparationUtils.separate(encryptedData.first, encryptedData.second, hash)
-    }
-
-    override fun decryptViaSecretKeyDivided(data: String, key: SecretKey): Pair<String, Boolean> {
-        val dividedData = EncryptionSeparationUtils.divide(data)
-        val encryptedData = dividedData.data
-        val iv = dividedData.iv
-        val decryptedData = decryptViaSecretKey(encryptedData, key, iv)
-        val isHashEquals = dividedData.hash.contentEquals(hashUtils.getHmac(decryptedData, key))
-        return decryptedData to isHashEquals
-    }
-
-    private fun rsaCipherDoFinal(data: String): String {
+    private fun encryptRsaCipherDoFinal(data: String): String {
         val cipherBytes = encryptDoFinal(data, rsaCipher)
         return Base64.encodeToString(cipherBytes, Base64.NO_WRAP)
+    }
+
+    private fun decryptRsaCipherDoFinal(data: String): String {
+        val cipherBytes = decryptDoFinal(data, rsaCipher)
+        val cipherBase64Bytes = Base64.decode(cipherBytes, Base64.NO_WRAP)
+        return cipherBase64Bytes.decodeToString()
     }
 
     private fun encryptAesCipherDoFinal(data: String): Pair<String, ByteArray> {

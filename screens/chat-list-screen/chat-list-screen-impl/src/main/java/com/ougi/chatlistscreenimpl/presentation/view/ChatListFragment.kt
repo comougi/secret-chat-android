@@ -25,6 +25,9 @@ class ChatListFragment :
     @Inject
     lateinit var viewModelFactory: ChatListFragmentViewModel.Factory
 
+    @Inject
+    lateinit var chatListAdapter: ChatListAdapter
+
     override fun onAttach(context: Context) {
         ChatListScreenComponentHolder.getInstance().inject(this)
         super.onAttach(context)
@@ -47,7 +50,6 @@ class ChatListFragment :
     }
 
     private fun setChatListRecyclerViewParams(result: Result<List<Chat>?>) {
-        val chatListAdapter = ChatListAdapter()
         with(binding.chatListRecyclerView) {
             adapter = chatListAdapter
             layoutManager =

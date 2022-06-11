@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatDatabaseDaoImpl : ChatDatabaseDao {
 
-    @Query("SELECT * FROM chat")
+    @Query("SELECT * FROM chat ORDER BY id DESC")
     override suspend fun getAllChats(): List<Chat>
 
-    @Query("SELECT * FROM chat")
+    @Query("SELECT * FROM chat ORDER BY id DESC")
     override fun getAllChatsFlow(): Flow<List<Chat>>
 
     @Query("SELECT * FROM chat WHERE id = :chatId")

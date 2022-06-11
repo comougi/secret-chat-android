@@ -1,5 +1,6 @@
 package com.ougi.serverinforepoimpl.data.network
 
+import com.ougi.encryptionapi.data.entity.AesEncryptedData
 import com.ougi.networkapi.data.NetworkService
 import retrofit2.Call
 import retrofit2.http.Body
@@ -13,7 +14,7 @@ interface ServerInfoRepositoryNetworkService : NetworkService {
     fun getMessagingWebSocketConnectionLink(
         @Query("userId") userId: String,
         @Body userIdEncrypted: String
-    ): Call<String>
+    ): Call<AesEncryptedData>
 
     @GET("connectToPushWebSocket")
     fun getPushWebSocketConnectionLink(@Query("userId") userId: String): Call<String>

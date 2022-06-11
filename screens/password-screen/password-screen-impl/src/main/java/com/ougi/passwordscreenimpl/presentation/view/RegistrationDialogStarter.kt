@@ -2,7 +2,7 @@ package com.ougi.passwordscreenimpl.presentation.view
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.ougi.corecommon.base.ScreenStarter
+import com.ougi.corecommon.base.ActivityStarter
 import com.ougi.passwordscreenimpl.R
 import com.ougi.passwordscreenimpl.di.PasswordScreenComponentHolder
 import com.ougi.passwordscreenimpl.presentation.viewmodel.UserRegistrationViewModel
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class RegistrationDialogStarter @Inject constructor(
     private val context: Context,
-    private val mainActivityScreenStarter: ScreenStarter
+    private val mainActivityScreenStarter: ActivityStarter
 ) {
 
     private val viewModel: UserRegistrationViewModel by lazy { factory.create() }
@@ -46,7 +46,7 @@ class RegistrationDialogStarter @Inject constructor(
         val activity = fragment.requireActivity()
 
         if (isOnStart) {
-            mainActivityScreenStarter.startScreen()
+            mainActivityScreenStarter.start()
         } else {
             activity.onBackPressed()
         }

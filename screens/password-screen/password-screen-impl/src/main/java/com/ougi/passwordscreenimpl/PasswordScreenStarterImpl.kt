@@ -10,7 +10,7 @@ import javax.inject.Inject
 class PasswordScreenStarterImpl @Inject constructor(private val context: Context) :
     PasswordScreenStarter {
 
-    override fun startScreen() {
+    override fun start() {
         val intent = Intent(context, PasswordScreenActivity::class.java)
             .apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK

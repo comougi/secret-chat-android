@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepository {
     suspend fun createChat(userIds: List<String>): Result<Chat?>
     fun getChats(): Flow<Result<List<Chat>?>>
+    suspend fun getChatById(chatId: String): Chat?
+    suspend fun insertChatToDatabase(chat: Chat)
 }

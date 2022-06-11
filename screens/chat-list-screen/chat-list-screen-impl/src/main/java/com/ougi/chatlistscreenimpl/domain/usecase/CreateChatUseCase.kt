@@ -1,6 +1,5 @@
 package com.ougi.chatlistscreenimpl.domain.usecase
 
-import com.ougi.chatrepoapi.data.database.ChatDatabaseDao
 import com.ougi.chatrepoapi.data.entity.Chat
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.coreutils.utils.Result
@@ -19,7 +18,6 @@ interface CreateChatUseCase {
 class CreateChatUseCaseImpl @Inject constructor(
     private val userRepository: UserRepository,
     private val chatRepository: ChatRepository,
-    private val chatDatabaseDao: ChatDatabaseDao
 ) :
     CreateChatUseCase {
 
@@ -44,6 +42,12 @@ class CreateChatUseCaseImpl @Inject constructor(
     }
 
     private suspend fun saveChat(chat: Chat) {
-        chatDatabaseDao.insertChat(chat)
+        val userId = userRepository.getUserId()
+        val dbChat = Chat(
+            id = chat.id,
+            title = chat.title,
+            users = chat.users.toMutableList()//.filter { user -> user.id != userId }
+        )
+        chatRepository.insertChatToDatabase(dbChat)
     }
 }

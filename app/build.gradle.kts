@@ -64,6 +64,8 @@ dependencies {
     implementation(project(":screens:password-screen:password-screen-impl"))
     implementation(project(":screens:chat-list-screen:chat-list-screen-api"))
     implementation(project(":screens:chat-list-screen:chat-list-screen-impl"))
+    implementation(project(":screens:chat-screen:chat-screen-api"))
+    implementation(project(":screens:chat-screen:chat-screen-impl"))
 
     //repositories
     implementation(project(":repositories:chat-repo:chat-repo-api"))
@@ -72,6 +74,8 @@ dependencies {
     implementation(project(":repositories:server-info-repo:server-info-repo-impl"))
     implementation(project(":repositories:user-repo:user-repo-api"))
     implementation(project(":repositories:user-repo:user-repo-impl"))
+    implementation(project(":repositories:message-repo:message-repo-api"))
+    implementation(project(":repositories:message-repo:message-repo-impl"))
 
     //dagger
     val daggerVersion = "2.41"
@@ -94,9 +98,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:2.4.1")
 
     //default
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

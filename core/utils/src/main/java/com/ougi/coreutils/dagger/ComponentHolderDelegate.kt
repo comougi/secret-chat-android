@@ -17,10 +17,8 @@ class ComponentHolderDelegate<A : BaseFeatureApi, D : BaseFeatureDeps>(
         synchronized(this) {
             depsProvider?.let { provider ->
                 api = component?.get()
-                if (api == null) {
-                    api = apiFactory(provider.invoke())
+                    ?: apiFactory(provider.invoke())
                         .also { component = WeakReference(api) }
-                }
             }
         }
 

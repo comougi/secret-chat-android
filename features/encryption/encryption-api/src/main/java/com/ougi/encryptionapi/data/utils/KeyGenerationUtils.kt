@@ -12,4 +12,6 @@ interface KeyGenerationUtils {
     fun generateRsaKeyPair(): KeyPair
     fun generateDHKeyPair(): KeyPair
     fun generateDHAesSecretKey(publicKey: PublicKey, privateKey: PrivateKey): SecretKey
+    fun createPublicKeyFromString(publicKeyString: String, algorithm: String): PublicKey
+    fun generateAesKey(): SecretKey
 }

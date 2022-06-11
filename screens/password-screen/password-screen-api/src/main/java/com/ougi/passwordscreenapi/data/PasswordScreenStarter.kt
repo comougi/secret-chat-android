@@ -1,5 +1,5 @@
 package com.ougi.passwordscreenapi.data
 
-import com.ougi.corecommon.base.ScreenStarter
+import com.ougi.corecommon.base.ActivityStarter
 
-interface PasswordScreenStarter : ScreenStarter
+interface PasswordScreenStarter : ActivityStarter

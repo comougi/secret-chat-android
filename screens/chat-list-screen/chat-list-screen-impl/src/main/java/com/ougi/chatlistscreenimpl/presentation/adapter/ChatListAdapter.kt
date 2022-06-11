@@ -2,13 +2,17 @@ package com.ougi.chatlistscreenimpl.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ougi.chatlistscreenimpl.databinding.ChatListItemBinding
 import com.ougi.chatrepoapi.data.entity.Chat
+import com.ougi.chatscreenapi.data.ChatScreenStarter
+import javax.inject.Inject
 
-class ChatListAdapter : ListAdapter<Chat, ChatListAdapter.ChatItemViewHolder>(ChatDiffUtil) {
+class ChatListAdapter @Inject constructor(private val chatScreenStarterFactory: ChatScreenStarter.Factory) :
+    ListAdapter<Chat, ChatListAdapter.ChatItemViewHolder>(ChatDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,11 +25,16 @@ class ChatListAdapter : ListAdapter<Chat, ChatListAdapter.ChatItemViewHolder>(Ch
         holder.bind(chat)
     }
 
-    class ChatItemViewHolder(private val binding: ChatListItemBinding) :
+    inner class ChatItemViewHolder(private val binding: ChatListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-            binding.chatTitleTextView.text = chat.chatTitle
+            binding.chatTitleTextView.text = chat.title
             binding.lastMessageTextView.text = "Last message"
+
+            binding.root.setOnClickListener {
+                val navController = binding.root.findNavController()
+                chatScreenStarterFactory.create(chat.id).start(navController)
+            }
         }
     }
 

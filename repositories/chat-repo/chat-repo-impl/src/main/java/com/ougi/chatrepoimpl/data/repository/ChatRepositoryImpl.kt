@@ -33,7 +33,6 @@ class ChatRepositoryImpl @Inject constructor(
             val chatJsonDecrypted = encryptionClientApi.decryptViaDHAesKey(chatJsonEncrypted)
             return if (chatJsonDecrypted.second) {
                 val chat = Json.decodeFromString<Chat>(chatJsonDecrypted.first)
-                chatDatabaseDao.insertChat(chat)
                 Result.Success(chat)
             } else
                 Result.Error()
@@ -43,9 +42,18 @@ class ChatRepositoryImpl @Inject constructor(
         return Result.Error(message)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getChats(): Flow<Result<List<Chat>?>> = chatDatabaseDao.getAllChatsFlow()
         .map { list -> Result.Success(list) as Result<List<Chat>?> }
         .catch { emit(Result.Error()) }
         .onEmpty { emit(Result.Loading()) }
+
+    override suspend fun getChatById(chatId: String): Chat? {
+        return chatDatabaseDao.getChatById(chatId)
+    }
+
+    override suspend fun insertChatToDatabase(chat: Chat) {
+        chatDatabaseDao.insertChat(chat)
+    }
 
 }
