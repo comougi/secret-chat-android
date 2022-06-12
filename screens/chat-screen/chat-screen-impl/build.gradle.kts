@@ -52,7 +52,7 @@ dependencies {
     implementation(project(":features:encryption:encryption-api"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -68,4 +68,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
 }

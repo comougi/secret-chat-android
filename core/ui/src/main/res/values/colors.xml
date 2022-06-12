@@ -13,4 +13,6 @@
     <color name="primary_blue">#005AC1</color>
     <color name="secondary_blue">#205DAF</color>
     <color name="light_blue">#ABC7FF</color>
+
+    <color name="light_gray">#C0C0C0</color>
 </resources>

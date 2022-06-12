@@ -43,7 +43,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
     //default
     implementation("androidx.core:core-ktx:1.8.0")

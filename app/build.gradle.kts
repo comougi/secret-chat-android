@@ -78,7 +78,7 @@ dependencies {
     implementation(project(":repositories:message-repo:message-repo-impl"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     //okhttp
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.8")
 
     //lifecycle
     implementation("androidx.lifecycle:lifecycle-process:2.4.1")

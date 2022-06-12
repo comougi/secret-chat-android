@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface MessageSender {
     val messages: StateFlow<Pair<String /* id */, String /* message */>?>
-    suspend fun sendMessage(message: Message)
+    suspend fun sendMessage(message: Message, publicKeyStr: String, encrypted: Boolean = true)
 }

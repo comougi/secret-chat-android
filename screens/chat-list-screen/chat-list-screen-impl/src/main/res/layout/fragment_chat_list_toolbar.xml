@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         app:subtitleCentered="true"
         app:title="@string/chats"
+        app:menu="@menu/toolbar_menu"
         app:titleCentered="true" />
 
 

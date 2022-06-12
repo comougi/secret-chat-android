@@ -45,9 +45,10 @@ dependencies {
     implementation(project(":repositories:message-repo:message-repo-api"))
     implementation(project(":repositories:server-info-repo:server-info-repo-api"))
     implementation(project(":repositories:chat-repo:chat-repo-api"))
+    implementation(project(":repositories:user-repo:user-repo-api"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -56,7 +57,7 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
     //okhttp
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.8")
 
     //coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
@@ -66,8 +67,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
     //serialization
-    val serializationVersion = "1.3.2"
+    val serializationVersion = "1.3.3"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
 
     //default
     implementation("androidx.core:core-ktx:1.8.0")

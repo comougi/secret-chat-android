@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.ougi.coreutils.utils.NotificationUtils
 import com.ougi.messagerepoapi.data.entities.Message
 import com.ougi.messagerepoapi.data.repository.MessageRepository
 import com.ougi.messagingapi.data.MessageReceiver
@@ -49,7 +50,10 @@ class MessagingFeatureWorker @AssistedInject constructor(
                     CoroutineScope(Job()).launch {
                         webSocketListener.onMessageStateFlow.collect { message ->
                             if (message != null)
-                                messageReceiver.receiveMessage(message)
+                                when (message) {
+                                    "push" -> NotificationUtils(applicationContext).notify()
+                                    else -> messageReceiver.receiveMessage(message)
+                                }
                         }
                     }
 
@@ -101,6 +105,6 @@ class MessagingFeatureWorker @AssistedInject constructor(
         private const val PARAMS = "params"
         const val WORK_NAME = "MessagingWork"
         const val STATE = "state"
-        const val WEB_SOCKET = "FinalWebSocket"
+        private const val PUSH = "push"
     }
 }

@@ -44,7 +44,7 @@ dependencies {
     implementation(project(":screens:password-screen:password-screen-api"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -52,7 +52,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //serialization
-    val serializationVersion = "1.3.2"
+    val serializationVersion = "1.3.3"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default

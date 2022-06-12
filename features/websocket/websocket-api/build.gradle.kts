@@ -39,10 +39,10 @@ dependencies {
     implementation(project(":core:common"))
 
     //okhttp
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.8")
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
     //default
     implementation("androidx.core:core-ktx:1.8.0")

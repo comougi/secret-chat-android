@@ -11,6 +11,7 @@ import com.ougi.messagerepoapi.data.entities.Message
 import com.ougi.messagerepoapi.data.entities.PersonalMessage
 import com.ougi.messagerepoapi.data.entities.SystemMessage
 import com.ougi.messagerepoapi.data.repository.MessageRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -81,7 +82,11 @@ class MessageRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun getSystemMessages(): List<SystemMessage>? {
+    override suspend fun getSystemMessages(): List<SystemMessage>? {
         return systemMessageDatabaseDao.getAllSystemMessages()
+    }
+
+    override fun personalMessagesByChatId(chatId: String): Flow<List<PersonalMessage>> {
+        return personalMessageDatabaseDao.getChatMessagesFlow(chatId)
     }
 }

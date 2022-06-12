@@ -1,6 +1,9 @@
 package com.ougi.messagerepoapi.data.entities
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+
 
 interface Message {
     val id: String
@@ -8,8 +11,10 @@ interface Message {
     val chatId: String
     val recipientId: String?
     val type: Type
-    val data: Any
+    var data: String
     var status: Status?
+    val date: Instant
+        get() = Clock.System.now()
 
     @Serializable
     enum class Type {

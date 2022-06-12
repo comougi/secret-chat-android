@@ -41,15 +41,12 @@ class SendMessageUseCaseImpl @Inject constructor(
         personalMessageDatabaseDao.insertMessage(dbMessage)
 
         chat.users.forEach { user ->
-            val encryptedMessage =
-                messageRepository.encryptMessageData(messageText, user.rsaPublicKey)
-
             val message = createMessage(
-                encryptedMessage = encryptedMessage,
+                encryptedMessage = messageText,
                 chatId = chatId,
                 recipientId = user.id
             )
-            messageSender.sendMessage(message)
+            messageSender.sendMessage(message, user.rsaPublicKey)
         }
     }
 

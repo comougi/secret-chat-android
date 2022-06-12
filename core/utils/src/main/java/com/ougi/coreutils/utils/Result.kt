@@ -8,9 +8,9 @@ sealed class Result<T> private constructor(data: T?, val message: Any?) {
         Result<T>(data, StringParser.parseToString(message))
 
     class Error<T>(message: Any? = null) :
-        Result<T?>(null, StringParser.parseToString(message))
+        Result<T>(Any() as T, StringParser.parseToString(message))
 
     class Loading<T>(message: Any? = null) :
-        Result<T?>(null, StringParser.parseToString(message))
+        Result<T>(Any() as T, StringParser.parseToString(message))
 
 }
