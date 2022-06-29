@@ -3,9 +3,14 @@ package com.ougi.chatlistscreenimpl.domain.usecase
 import com.ougi.chatrepoapi.data.entity.Chat
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.coreutils.utils.Result
+import com.ougi.messagerepoapi.data.entities.Message
+import com.ougi.messagerepoapi.data.entities.SystemMessage
+import com.ougi.messagingapi.data.MessageSender
 import com.ougi.userrepoapi.data.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 interface CreateChatUseCase {
@@ -18,6 +23,7 @@ interface CreateChatUseCase {
 class CreateChatUseCaseImpl @Inject constructor(
     private val userRepository: UserRepository,
     private val chatRepository: ChatRepository,
+    private val messageSender: MessageSender,
 ) :
     CreateChatUseCase {
 
@@ -37,17 +43,33 @@ class CreateChatUseCaseImpl @Inject constructor(
         val createChatResult = chatRepository.createChat(userIds)
         createChatResultStateFlow.value = createChatResult
         if (createChatResult is Result.Success) {
-            saveChat(createChatResult.data!!)
+            val chat = createChatResult.data!!
+            val userId = userRepository.getUserId()
+
+            val filteredUsersChat = Chat(
+                id = chat.id,
+                title = chat.title,
+                users = chat.users.filter { user -> user.id != userId }
+            )
+            chatRepository.insertChatToDatabase(filteredUsersChat)
+            filteredUsersChat.users.forEach { user ->
+
+                val messageData = SystemMessage.Data(
+                    SystemMessage.Data.Type.CHAT_ADDED,
+                    Json.encodeToString(chat)
+                )
+
+                val message = SystemMessage(
+                    senderId = userId,
+                    recipientId = user.id,
+                    chatId = chat.id,
+                    data = Json.encodeToString(messageData),
+                    type = Message.Type.SYSTEM
+                )
+                messageSender.sendMessage(message, user.rsaPublicKey)
+            }
         }
+
     }
 
-    private suspend fun saveChat(chat: Chat) {
-        val userId = userRepository.getUserId()
-        val dbChat = Chat(
-            id = chat.id,
-            title = chat.title,
-            users = chat.users.toMutableList()//.filter { user -> user.id != userId }
-        )
-        chatRepository.insertChatToDatabase(dbChat)
-    }
 }

@@ -7,3 +7,4 @@ interface ComponentHolder<A : BaseFeatureApi, D : BaseFeatureDeps> {
     var depsProvider: (() -> D)?
     fun getInstance(): A
 }
+

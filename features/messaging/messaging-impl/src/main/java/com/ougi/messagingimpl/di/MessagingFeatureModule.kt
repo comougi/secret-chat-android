@@ -2,6 +2,7 @@ package com.ougi.messagingimpl.di
 
 import com.ougi.coreutils.dagger.Feature
 import com.ougi.encryptionapi.data.EncryptionClientApi
+import com.ougi.messagerepoapi.data.repository.MessageRepository
 import com.ougi.messagingapi.data.*
 import com.ougi.messagingimpl.data.MessageReceiverImpl
 import com.ougi.messagingimpl.data.MessageSenderImpl
@@ -29,8 +30,11 @@ interface MessagingFeatureModule {
 
     companion object {
         @[Feature Provides]
-        fun provideMessageSender(encryptionClientApi: EncryptionClientApi): MessageSender {
-            return MessageSenderImpl.getInstance(encryptionClientApi)
+        fun provideMessageSender(
+            encryptionClientApi: EncryptionClientApi,
+            messageRepository: MessageRepository
+        ): MessageSender {
+            return MessageSenderImpl.getInstance(encryptionClientApi, messageRepository)
         }
     }
 }

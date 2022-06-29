@@ -20,7 +20,11 @@ interface ChatListScreenModule {
     fun bindObserveConnectionUseCase(observeConnectionUseCaseImpl: ObserveConnectionUseCaseImpl): ObserveConnectionUseCase
 
     @[Feature Binds]
+    fun bindGetUserInfoUseCase(getUserInfoUseCaseImpl: GetUserInfoUseCaseImpl): GetUserInfoUseCase
+
+    @[Feature Binds]
     fun bindChatListToolbarFragmentViewModelFactory(factory: ChatListToolbarFragmentViewModelImpl.Factory): ChatListToolbarFragmentViewModel.Factory
+
 
     @[Feature Binds]
     fun bindCreateChatUseCase(createChatUseCaseImpl: CreateChatUseCaseImpl): CreateChatUseCase

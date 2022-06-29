@@ -25,7 +25,7 @@ class MessagingFeatureClientApiImpl @Inject constructor(private val context: Con
                 addTag(MessagingFeatureWorker.WORK_NAME)
                 setConstraints(constraints)
                 setBackoffCriteria(BackoffPolicy.LINEAR, 5, TimeUnit.SECONDS)
-                setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+              //  setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 setInputData(workDataOf(IS_IN_FOREGROUND to isInForeground))
             }.build()
 

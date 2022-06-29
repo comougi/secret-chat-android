@@ -15,5 +15,4 @@ interface ChatScreenDeps : BaseFeatureDeps {
     val messageDatabaseDao: PersonalMessageDatabaseDao
     val keyStorageApi: KeyStorageApi
     val messageRepository: MessageRepository
-
 }

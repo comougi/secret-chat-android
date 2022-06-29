@@ -8,11 +8,7 @@ import javax.inject.Inject
 
 internal class DbClientApiImpl @Inject constructor(private val context: Context) : DbClientApi {
     override fun provideDatabase(databaseClass: Class<out BaseDatabase>): BaseDatabase {
-        return Room.databaseBuilder(
-            context,
-            databaseClass,
-            "${databaseClass.name}"
-        )//Config.APP_DATABASE_NAME)
+        return Room.databaseBuilder(context, databaseClass, databaseClass.name)
             .fallbackToDestructiveMigration()
             .build()
     }

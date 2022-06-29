@@ -11,6 +11,7 @@ import com.ougi.messagerepoapi.data.entities.Message
 import com.ougi.messagerepoapi.data.entities.PersonalMessage
 import com.ougi.messagerepoapi.data.entities.SystemMessage
 import com.ougi.messagerepoapi.data.repository.MessageRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -33,18 +34,11 @@ class MessageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateMessageStatus(messageId: String, status: Message.Status) {
-        val systemMessage = systemMessageDatabaseDao.getMessageById(messageId)
         val personalMessage = personalMessageDatabaseDao.getMessageById(messageId)
-
-        if (systemMessage != null) {
-            systemMessage.status = status
-            systemMessageDatabaseDao.updateMessage(systemMessage)
-        }
         if (personalMessage != null) {
             personalMessage.status = status
             personalMessageDatabaseDao.updateMessage(personalMessage)
         }
-
     }
 
     override fun encryptMessageData(data: String, publicKey: String): String {
@@ -81,7 +75,15 @@ class MessageRepositoryImpl @Inject constructor(
         }
     }
 
-    suspend fun getSystemMessages(): List<SystemMessage>? {
+    override fun getMessageById(id: String): Flow<PersonalMessage> {
+        return personalMessageDatabaseDao.getMessageByIdFlow(id)
+    }
+
+    override suspend fun getSystemMessages(): List<SystemMessage>? {
         return systemMessageDatabaseDao.getAllSystemMessages()
+    }
+
+    override fun personalMessagesByChatId(chatId: String): Flow<List<PersonalMessage>> {
+        return personalMessageDatabaseDao.getChatMessagesFlow(chatId)
     }
 }

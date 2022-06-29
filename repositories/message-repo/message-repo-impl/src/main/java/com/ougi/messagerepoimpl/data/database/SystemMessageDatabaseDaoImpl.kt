@@ -7,7 +7,7 @@ import com.ougi.messagerepoapi.data.entities.SystemMessage
 @Dao
 interface SystemMessageDatabaseDaoImpl : SystemMessageDatabaseDao {
 
-    @Query("SELECT * FROM system_messages")
+    @Query("SELECT * FROM system_messages ORDER BY date DESC")
     override suspend fun getAllSystemMessages(): List<SystemMessage>?
 
     @Query("SELECT * FROM system_messages WHERE id=:id")
@@ -16,7 +16,7 @@ interface SystemMessageDatabaseDaoImpl : SystemMessageDatabaseDao {
     @Update
     override suspend fun updateMessage(message: SystemMessage)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     override suspend fun insertMessage(message: SystemMessage)
 
     @Delete

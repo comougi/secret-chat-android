@@ -6,6 +6,7 @@ import com.ougi.corecommon.base.di.BaseFeatureDeps
 import com.ougi.encryptionapi.data.EncryptionClientApi
 import com.ougi.messagerepoapi.data.repository.MessageRepository
 import com.ougi.serverinforepoapi.data.repository.ServerInfoRepository
+import com.ougi.userrepoapi.data.repository.UserRepository
 import com.ougi.websocketapi.data.WebSocketClientApi
 
 interface MessagingFeatureDeps : BaseFeatureDeps {
@@ -15,4 +16,5 @@ interface MessagingFeatureDeps : BaseFeatureDeps {
     val encryptionClientApi: EncryptionClientApi
     val messageRepository: MessageRepository
     val chatRepository: ChatRepository
+    val userRepository: UserRepository
 }

@@ -43,6 +43,6 @@ class MessageSenderFragmentViewModelImpl(
     }
 
     companion object {
-        const val CHAT_ID = "chatId"
+      private const val CHAT_ID = "chatId"
     }
 }

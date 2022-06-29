@@ -43,18 +43,18 @@ dependencies {
     implementation(project(":features:websocket:websocket-api"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
     //okhttp
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.8")
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
     //serialization
-    val serializationVersion = "1.3.2"
+    val serializationVersion = "1.3.3"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PersonalMessageDatabaseDao {
     suspend fun getMessageById(id: String): PersonalMessage?
+    fun getMessageByIdFlow(id: String): Flow<PersonalMessage>
     suspend fun updateMessage(message: PersonalMessage)
     suspend fun insertMessage(message: PersonalMessage)
     fun getChatMessagesFlow(chatId: String): Flow<List<PersonalMessage>>

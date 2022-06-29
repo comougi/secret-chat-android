@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 @[Serializable Entity]
 data class Chat(
     @PrimaryKey(autoGenerate = false) val id: String,
-    val title: String = id.filter { char -> char.isDigit() },
+    val title: String = id.filter { char -> char.isDigit() }.take(10),
     val users: List<User>
 )

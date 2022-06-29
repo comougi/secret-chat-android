@@ -2,6 +2,8 @@ package com.ougi.messagerepoapi.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import java.util.*
 
@@ -13,7 +15,8 @@ data class PersonalMessage(
     override val chatId: String,
     override val recipientId: String? = null,
     override val type: Message.Type,
-    override val data: String,
-    override var status: Message.Status? = Message.Status.SENDING,
+    override var data: String,
+    override var status: Message.Status = Message.Status.SENDING,
+    override val date: Instant = Clock.System.now()
 ) : Message
 

@@ -11,4 +11,7 @@
     <string name="start_chatting">Start chatting</string>
     <string name="check_has_user_id">Check has user id</string>
     <string name="you_already_added_user_with_id">You already added user with id</string>
+    <string name="your_id">Your id</string>
+    <string name="your_id_is">Your id is</string>
+
 </resources>

@@ -43,10 +43,10 @@ dependencies {
     implementation(project(":core:utils"))
 
     //coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
     //lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02")
 
     //default
     implementation("androidx.core:core-ktx:1.8.0")

@@ -52,7 +52,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     //serialization
-    val serializationVersion = "1.3.2"
+    val serializationVersion = "1.3.3"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
     //default

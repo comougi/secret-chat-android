@@ -209,6 +209,8 @@ object Injector {
                                 get() = MessageRepositoryComponentHolder.getInstance().messageRepository
                             override val chatRepository: ChatRepository
                                 get() = ChatRepositoryComponentHolder.getInstance().chatRepository
+                            override val userRepository: UserRepository
+                                get() = UserRepositoryComponentHolder.getInstance().userRepository
                             override val depsHolder: DepsHolder<out BaseFeatureDeps> = depsHolder
                         }
                     }
@@ -253,6 +255,8 @@ object Injector {
                         object : ChatListScreenDeps {
                             override val messagingFeatureClientApi: MessagingFeatureClientApi
                                 get() = MessagingFeatureComponentHolder.getInstance().messagingFeatureClientApi
+                            override val messageSender: MessageSender
+                                get() = MessagingFeatureComponentHolder.getInstance().messageSender
                             override val userRepository: UserRepository
                                 get() = UserRepositoryComponentHolder.getInstance().userRepository
                             override val chatRepository: ChatRepository

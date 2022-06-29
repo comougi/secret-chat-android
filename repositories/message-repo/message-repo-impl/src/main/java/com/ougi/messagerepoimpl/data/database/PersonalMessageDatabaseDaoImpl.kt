@@ -11,13 +11,16 @@ interface PersonalMessageDatabaseDaoImpl : PersonalMessageDatabaseDao {
     @Query("SELECT * FROM personal_messages WHERE id=:id")
     override suspend fun getMessageById(id: String): PersonalMessage?
 
+    @Query("SELECT * FROM personal_messages WHERE id=:id")
+    override fun getMessageByIdFlow(id: String): Flow<PersonalMessage>
+
     @Update
     override suspend fun updateMessage(message: PersonalMessage)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     override suspend fun insertMessage(message: PersonalMessage)
 
-    @Query("SELECT * FROM personal_messages WHERE chatId=:chatId")
+    @Query("SELECT * FROM personal_messages WHERE chatId=:chatId ORDER BY date DESC")
     override fun getChatMessagesFlow(chatId: String): Flow<List<PersonalMessage>>
 
     @Delete

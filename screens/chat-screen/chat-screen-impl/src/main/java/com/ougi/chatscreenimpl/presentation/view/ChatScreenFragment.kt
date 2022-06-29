@@ -16,6 +16,9 @@ class ChatScreenFragment :
     override fun FragmentChatScreenBinding.initialize() {
         with(binding) {
             messageSenderContainer.commitFragment(MessageSenderFragment::class.java)
+            messageListContainer.commitFragment(MessageListFragment::class.java)
+            toolbarContainer.commitFragment(ChatToolbarFragment::class.java)
+
         }
     }
 

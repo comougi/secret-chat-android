@@ -3,6 +3,7 @@ package com.ougi.messagerepoimpl.data.database
 import androidx.room.TypeConverter
 import com.ougi.messagerepoapi.data.entities.PersonalMessage
 import com.ougi.messagerepoapi.data.entities.SystemMessage
+import kotlinx.datetime.Instant
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -38,4 +39,15 @@ class MessageRepositoryDatabaseTypeConverter {
     fun convertJsonToSystemMessageData(json: String): SystemMessage.Data {
         return Json.decodeFromString(json)
     }
+
+    @TypeConverter
+    fun convertInstantToJson(instant: Instant): String {
+        return Json.encodeToString(instant)
+    }
+
+    @TypeConverter
+    fun convertJsonToInstant(json: String): Instant {
+        return Json.decodeFromString(json)
+    }
+
 }

@@ -48,10 +48,11 @@ dependencies {
     implementation(project(":screens:chat-list-screen:chat-list-screen-api"))
     implementation(project(":repositories:chat-repo:chat-repo-api"))
     implementation(project(":repositories:user-repo:user-repo-api"))
+    implementation(project(":repositories:message-repo:message-repo-api"))
     implementation(project(":screens:chat-screen:chat-screen-api"))
 
     //dagger
-    val daggerVersion = "2.41"
+    val daggerVersion = "2.42"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -59,6 +60,11 @@ dependencies {
     val navVersion = "2.4.2"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
+    //serialization
+    val serializationVersion = "1.3.3"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.3")
 
     //default
     implementation("androidx.core:core-ktx:1.8.0")
