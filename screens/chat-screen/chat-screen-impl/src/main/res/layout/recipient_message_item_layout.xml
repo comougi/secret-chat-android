@@ -13,8 +13,8 @@
         android:layout_marginTop="32dp"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:textColor="@color/light_gray"
         android:visibility="gone"
+        android:textColor="@color/light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +28,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
 
+
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_gchat_message_other"
+        android:id="@+id/messageCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_container"
@@ -56,12 +57,13 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
+        android:layout_marginStart="6dp"
         android:id="@+id/messageTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/light_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/card_gchat_message_other"
-        app:layout_constraintStart_toEndOf="@+id/card_gchat_message_other" />
+        app:layout_constraintBottom_toBottomOf="@+id/messageCard"
+        app:layout_constraintStart_toEndOf="@+id/messageCard" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

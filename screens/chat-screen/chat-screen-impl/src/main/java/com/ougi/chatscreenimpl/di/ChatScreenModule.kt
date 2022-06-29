@@ -34,4 +34,11 @@ interface ChatScreenModule {
 
     @[Feature Binds]
     fun bindMessageListAdapterViewModelFactory(factory: MessageListAdapterViewModelImpl.Factory): MessageListAdapterViewModel.Factory
+
+
+    @[Feature Binds]
+    fun bindGetChatInfoUseCase(getChatInfoUseCaseImpl: GetChatInfoUseCaseImpl): GetChatInfoUseCase
+
+    @[Feature Binds]
+    fun bindChatToolbarFragmentViewModelFactory(factory: ChatToolbarFragmentViewModelImpl.Factory): ChatToolbarFragmentViewModel.Factory
 }

@@ -13,6 +13,8 @@ interface MessageRepository {
     suspend fun saveMessage(message: Message)
     suspend fun deleteMessage(message: Message)
 
+    fun getMessageById(id: String): Flow<PersonalMessage>
+
     suspend fun updateMessageStatus(messageId: String, status: Message.Status)
 
     fun encryptMessageData(data: String, publicKey: String): String

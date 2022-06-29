@@ -1,6 +1,7 @@
 package com.ougi.chatscreenimpl.domain.usecase
 
 import android.util.Base64
+import android.util.Log
 import com.ougi.chatrepoapi.data.repository.ChatRepository
 import com.ougi.encryptionapi.data.KeyStorageApi
 import com.ougi.messagerepoapi.data.database.PersonalMessageDatabaseDao
@@ -9,6 +10,7 @@ import com.ougi.messagerepoapi.data.entities.PersonalMessage
 import com.ougi.messagerepoapi.data.repository.MessageRepository
 import com.ougi.messagingapi.data.MessageSender
 import com.ougi.userrepoapi.data.repository.UserRepository
+import java.util.*
 import javax.inject.Inject
 
 interface SendMessageUseCase {
@@ -32,7 +34,9 @@ class SendMessageUseCaseImpl @Inject constructor(
         val userPublicKeyString = Base64.encodeToString(userPublicKey.encoded, Base64.NO_WRAP)
         val internalEncryptedMessage =
             messageRepository.encryptMessageData(messageText, userPublicKeyString)
+        val messageId = UUID.randomUUID().toString()
         val dbMessage = createMessage(
+            id = messageId,
             encryptedMessage = internalEncryptedMessage,
             chatId = chatId
         )
@@ -42,31 +46,32 @@ class SendMessageUseCaseImpl @Inject constructor(
 
         chat.users.forEach { user ->
             val message = createMessage(
+                id = messageId,
                 encryptedMessage = messageText,
                 chatId = chatId,
                 recipientId = user.id
             )
+            Log.d("DATA", "id" + message.id)
             messageSender.sendMessage(message, user.rsaPublicKey)
         }
     }
 
     private suspend fun createMessage(
+        id: String,
         encryptedMessage: String,
         chatId: String,
         recipientId: String? = null
     ): PersonalMessage {
         val userId = userRepository.getUserId()
-        val status =
-            if (recipientId == null) Message.Status.SENDING
-            else null
 
         return PersonalMessage(
+            id = id,
             senderId = userId,
             chatId = chatId,
             recipientId = recipientId,
             data = encryptedMessage,
             type = Message.Type.PERSONAL,
-            status = status
+            status = Message.Status.SENDING
         )
     }
 

@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.ougi.chatscreenimpl.R
 import com.ougi.chatscreenimpl.databinding.RecipientMessageItemLayoutBinding
 import com.ougi.chatscreenimpl.databinding.UserMessageItemLayoutBinding
 import com.ougi.chatscreenimpl.presentation.viewmodel.MessageListAdapterViewModel
+import com.ougi.messagerepoapi.data.entities.Message
 import com.ougi.messagerepoapi.data.entities.PersonalMessage
 import com.ougi.messagerepoapi.data.repository.MessageRepository
 import kotlinx.coroutines.launch
@@ -96,6 +98,20 @@ class MessageListAdapter @Inject constructor(
                 }
                 messageTextView.setMessageText(message)
                 messageTimeTextView.text = parseDate(message.date)
+
+                lifecycleScope.launch {
+                    messageRepository.getMessageById(message.id).collect {
+                        val resource = when (it.status) {
+                            Message.Status.SENDING -> R.drawable.ic_sent_48
+                            Message.Status.SENT -> R.drawable.ic_sent_48
+                            Message.Status.DELIVERED -> R.drawable.ic_delivered_48
+                            Message.Status.FAIL -> R.drawable.ic_fail_48
+                            else -> R.drawable.ic_fail_48
+                        }
+                        messageStatusImageView.setImageResource(resource)
+                        messageStatusImageView.setBackgroundResource(resource)
+                    }
+                }
             }
         }
     }

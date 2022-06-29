@@ -17,6 +17,8 @@ class ChatScreenFragment :
         with(binding) {
             messageSenderContainer.commitFragment(MessageSenderFragment::class.java)
             messageListContainer.commitFragment(MessageListFragment::class.java)
+            toolbarContainer.commitFragment(ChatToolbarFragment::class.java)
+
         }
     }
 

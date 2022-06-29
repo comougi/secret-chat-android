@@ -16,7 +16,7 @@ data class PersonalMessage(
     override val recipientId: String? = null,
     override val type: Message.Type,
     override var data: String,
-    override var status: Message.Status? = Message.Status.SENDING,
+    override var status: Message.Status = Message.Status.SENDING,
     override val date: Instant = Clock.System.now()
 ) : Message
 

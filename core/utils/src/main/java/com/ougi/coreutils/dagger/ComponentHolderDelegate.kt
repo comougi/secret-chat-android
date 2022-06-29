@@ -27,3 +27,4 @@ class ComponentHolderDelegate<A : BaseFeatureApi, D : BaseFeatureDeps>(
 
     override fun getInstance(): A = apiInstance()
 }
+

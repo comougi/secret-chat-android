@@ -34,18 +34,11 @@ class MessageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateMessageStatus(messageId: String, status: Message.Status) {
-        val systemMessage = systemMessageDatabaseDao.getMessageById(messageId)
         val personalMessage = personalMessageDatabaseDao.getMessageById(messageId)
-
-        if (systemMessage != null) {
-            systemMessage.status = status
-            systemMessageDatabaseDao.updateMessage(systemMessage)
-        }
         if (personalMessage != null) {
             personalMessage.status = status
             personalMessageDatabaseDao.updateMessage(personalMessage)
         }
-
     }
 
     override fun encryptMessageData(data: String, publicKey: String): String {
@@ -80,6 +73,10 @@ class MessageRepositoryImpl @Inject constructor(
             is PersonalMessage -> personalMessageDatabaseDao.deleteMessage(message)
             is SystemMessage -> systemMessageDatabaseDao.deleteMessage(message)
         }
+    }
+
+    override fun getMessageById(id: String): Flow<PersonalMessage> {
+        return personalMessageDatabaseDao.getMessageByIdFlow(id)
     }
 
     override suspend fun getSystemMessages(): List<SystemMessage>? {

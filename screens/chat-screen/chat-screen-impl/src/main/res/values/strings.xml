@@ -1,3 +1,7 @@
 <resources>
     <string name="you_don_t_have_any_messages_yet">You don\'t have any messages yet</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

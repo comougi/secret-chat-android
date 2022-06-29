@@ -12,7 +12,7 @@ interface Message {
     val recipientId: String?
     val type: Type
     var data: String
-    var status: Status?
+    var status: Status
     val date: Instant
         get() = Clock.System.now()
 

@@ -11,6 +11,9 @@ interface PersonalMessageDatabaseDaoImpl : PersonalMessageDatabaseDao {
     @Query("SELECT * FROM personal_messages WHERE id=:id")
     override suspend fun getMessageById(id: String): PersonalMessage?
 
+    @Query("SELECT * FROM personal_messages WHERE id=:id")
+    override fun getMessageByIdFlow(id: String): Flow<PersonalMessage>
+
     @Update
     override suspend fun updateMessage(message: PersonalMessage)
 
