@@ -5,15 +5,11 @@ import dagger.Component
 import javax.inject.Singleton
 
 @[Component(
-    modules = [
-        AppProvidesModule::class,
-        AppBindsModule::class
-    ],
-    dependencies = [
-        AppDeps::class
-    ]
+    modules = [AppModule::class],
+    dependencies = [AppDeps::class]
 ) Singleton]
 interface AppComponent : AppApi {
+
 
     companion object {
         fun newInstance(appDeps: AppDeps): AppApi {

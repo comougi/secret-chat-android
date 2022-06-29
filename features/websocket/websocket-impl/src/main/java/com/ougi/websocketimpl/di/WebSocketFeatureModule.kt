@@ -3,10 +3,8 @@ package com.ougi.websocketimpl.di
 import com.ougi.coreutils.dagger.Feature
 import com.ougi.websocketapi.data.CustomWebSocketListener
 import com.ougi.websocketapi.data.WebSocketClientApi
-import com.ougi.websocketapi.data.WebSocketWorkerFactory
 import com.ougi.websocketimpl.data.CustomWebSocketListenerImpl
 import com.ougi.websocketimpl.data.WebSocketClientApiImpl
-import com.ougi.websocketimpl.data.WebSocketWorker
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,9 +19,6 @@ interface WebSocketFeatureModule {
 
     @[Feature Binds]
     fun bindCustomWebSocketListenerFactory(factory: CustomWebSocketListenerImpl.Factory): CustomWebSocketListener.Factory
-
-    @[Feature Binds]
-    fun bindWebSocketWorkerFactory(webSocketWorkerFactoryImpl: WebSocketWorker.WebSocketWorkerFactoryImpl): WebSocketWorkerFactory
 
     companion object {
         @[Feature Provides]

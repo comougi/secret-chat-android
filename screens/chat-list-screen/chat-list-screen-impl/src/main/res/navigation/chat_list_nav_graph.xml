@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_list_nav_graph"
+    app:startDestination="@id/chatListScreenFragment">
+
+    <fragment
+        android:id="@+id/chatListScreenFragment"
+        android:name="com.ougi.chatlistscreenimpl.presentation.view.ChatListScreenFragment"
+        android:label="fragment_chat_list_screen"
+        tools:layout="@layout/fragment_chat_list_screen">
+        <action
+            android:id="@+id/chatListScreenFragmentToCreateChatDialogFragment"
+            app:destination="@id/createChatDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/createChatDialogFragment"
+        android:name="com.ougi.chatlistscreenimpl.presentation.view.CreateChatDialogFragment"
+        android:label="fragment_create_chat_dialog"
+        tools:layout="@layout/fragment_create_chat_dialog" />
+</navigation>

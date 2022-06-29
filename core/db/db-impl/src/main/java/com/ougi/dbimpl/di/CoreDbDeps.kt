@@ -1,8 +1,8 @@
 package com.ougi.dbimpl.di
 
+import android.content.Context
 import com.ougi.corecommon.base.di.BaseFeatureDeps
-import com.ougi.coreutils.utils.ContextProvider
 
 interface CoreDbDeps : BaseFeatureDeps {
-    val contextProvider: ContextProvider
+    val context: Context
 }

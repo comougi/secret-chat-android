@@ -1,14 +1,14 @@
 package com.ougi.workmanagerinitializer.data.factory
 
 import androidx.work.DelegatingWorkerFactory
-import com.ougi.websocketapi.data.WebSocketWorkerFactory
+import androidx.work.WorkerFactory
 import javax.inject.Inject
 
-class CustomWorkerFactory @Inject constructor(
-    webSocketWorkerFactory: WebSocketWorkerFactory
-) : DelegatingWorkerFactory() {
+class CustomWorkerFactory @Inject constructor(factories: Set<@JvmSuppressWildcards WorkerFactory>) :
+    DelegatingWorkerFactory() {
     init {
-        //add factories here
-        addFactory(webSocketWorkerFactory)
+        factories.forEach { factory ->
+            addFactory(factory)
+        }
     }
 }
